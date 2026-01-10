@@ -25,7 +25,11 @@ Automated monitoring enabled. Verify process manually or activate continuous pro
             businessId: business.id,
             gapId: gap.id,
             sentAt: new Date(),
+            timestamp: new Date(),
             channel: 'EMAIL',
+            title: gap.title,
+            message: gap.description,
+            severity: gap.severity === 'CRITICAL' ? 'CRITICAL' : gap.severity === 'HIGH' ? 'WARNING' : 'INFO',
             content,
             status: 'SENT'
         };

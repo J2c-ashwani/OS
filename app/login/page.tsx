@@ -56,7 +56,7 @@ export default function LoginPage() {
                                 Email Address
                             </label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none" size={18} />
                                 <input
                                     id="email"
                                     type="email"
@@ -64,7 +64,8 @@ export default function LoginPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="you@example.com"
                                     required
-                                    className="w-full bg-[#0A0A0A] border border-gray-800 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-600 focus:border-emerald-500 focus:outline-none transition-colors"
+                                    className="w-full bg-[#0A0A0A] border border-gray-800 rounded-lg pl-10 py-3 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none transition-colors"
+                                    style={{ paddingLeft: '2.5rem', color: '#ffffff' }} // Explicit inline override
                                 />
                             </div>
                         </div>
@@ -75,7 +76,7 @@ export default function LoginPage() {
                                 Password
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none" size={18} />
                                 <input
                                     id="password"
                                     type="password"
@@ -83,7 +84,8 @@ export default function LoginPage() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
-                                    className="w-full bg-[#0A0A0A] border border-gray-800 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-600 focus:border-emerald-500 focus:outline-none transition-colors"
+                                    className="w-full bg-[#0A0A0A] border border-gray-800 rounded-lg pl-10 py-3 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none transition-colors"
+                                    style={{ paddingLeft: '2.5rem', color: '#ffffff' }} // Explicit inline override
                                 />
                             </div>
                         </div>

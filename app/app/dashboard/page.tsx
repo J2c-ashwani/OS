@@ -1,198 +1,165 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { MOCK_BUSINESSES, MOCK_DIAGNOSTICS, MOCK_GAPS, MOCK_SUBSCRIPTIONS } from '@/lib/data/store';
-import { Activity, Search, ShieldCheck, AlertTriangle, Zap, MessageSquare, BarChart3, FileWarning } from 'lucide-react';
-import { runDiagnosticsAction, activateSubscriptionAction, handleReplyAction, generateAnalyticsReportAction, generateLossEstimateAction } from '../../actions';
+import RevenueStats from '@/components/dashboard/RevenueStats';
+import SalesIntelligence from '@/components/dashboard/SalesIntelligence';
+import FunnelLeakMap from '@/components/dashboard/FunnelLeakMap';
+import SOPComplianceTable from '@/components/dashboard/SOPComplianceTable';
+import { Search, Bell, MessageSquare, Download, Zap } from 'lucide-react';
+import { getDashboardStatsAction, runDiagnosticsAction } from '../../actions';
+import { shouldShowWelcome, shouldShowProgressTracker } from '@/lib/onboarding/state';
+import WelcomeModal from '@/components/onboarding/WelcomeModal';
+import ProgressTracker from '@/components/onboarding/ProgressTracker';
+import AddBusinessWizard from '@/components/onboarding/AddBusinessWizard';
 
-export default function Home() {
+export default function Dashboard() {
   const [stats, setStats] = useState({
-    activeTargets: MOCK_BUSINESSES.length,
-    diagnosticsRun: MOCK_DIAGNOSTICS.length,
-    gapsIdentified: MOCK_GAPS.length,
+    activeTargets: 0,
+    diagnosticsRun: 0,
+    gapsIdentified: 0,
     outreachSent: 0
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
 
-  // Group logs by businessId for easy access
-  const diagnosticLogs = MOCK_DIAGNOSTICS.reduce((acc, log) => {
-    if (!acc[log.businessId]) acc[log.businessId] = [];
-    acc[log.businessId].push(log);
-    return acc;
-  }, {} as Record<string, typeof MOCK_DIAGNOSTICS>);
+  useEffect(() => {
+    // Check onboarding
+    setShowWelcomeModal(shouldShowWelcome());
+    setShowProgress(shouldShowProgressTracker());
 
-  const [isRunning, setIsRunning] = React.useState(false);
+    // Fetch Real Data
+    getDashboardStatsAction().then(data => {
+      setStats({
+        activeTargets: data.activeTargets,
+        diagnosticsRun: data.diagnosticsRun,
+        gapsIdentified: data.gapsIdentified,
+        outreachSent: data.outreachSent
+      });
+      setIsLoading(false);
+    });
+  }, []);
 
   async function handleRun() {
     setIsRunning(true);
     await runDiagnosticsAction();
-    // Local state update mostly handled by revalidatePath for data, but we can animate
+    // Refresh stats
+    const data = await getDashboardStatsAction();
+    setStats({
+      activeTargets: data.activeTargets,
+      diagnosticsRun: data.diagnosticsRun,
+      gapsIdentified: data.gapsIdentified,
+      outreachSent: data.outreachSent
+    });
     setIsRunning(false);
   }
 
+  // Handlers
+  const handleStartTour = () => setShowWizard(true);
+  const handleContinueSetup = () => setShowWizard(true);
+
+  // Derived Metrics for Visuals
+  const detectedLeaksValue = stats.gapsIdentified * 1250; // $1,250 per gap avg
+  const atRiskRevenueValue = stats.activeTargets * 5000; // $5k opportunity cost per target
+  const efficiencyScore = stats.diagnosticsRun > 0
+    ? Math.round(((stats.diagnosticsRun - stats.gapsIdentified) / stats.diagnosticsRun) * 100)
+    : 100;
+
   return (
     <DashboardLayout>
-      <div className="p-8">
-        <header className="mb-8 flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold text-white">Dashboard</h2>
-            <p className="text-slate-400">System Overview & Activity Feed</p>
+      <div className="flex flex-col h-full bg-background-light dark:bg-[#101622] text-slate-900 dark:text-slate-100 font-sans">
+        {/* Top Navbar */}
+        <header className="sticky top-0 z-10 flex items-center justify-between px-4 md:px-8 py-4 bg-white/80 dark:bg-[#101622]/80 backdrop-blur-md border-b border-slate-200 dark:border-[#2d3648]">
+          <div className="flex items-center gap-4 flex-1">
+            <div className="relative max-w-md w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+              <input
+                className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none text-slate-900 dark:text-white placeholder:text-slate-500"
+                placeholder="Search diagnostics..."
+                type="text"
+              />
+            </div>
           </div>
-          <div className="flex gap-3">
-            <button className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-md border border-slate-700 transition-all">
-              <Search size={16} />
-              Scan New Target
+          <div className="flex items-center gap-2 md:gap-3 ml-2">
+            <button className="hidden md:block p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+              <Bell size={20} />
             </button>
+            <button className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+              <MessageSquare size={20} />
+            </button>
+            <div className="h-6 w-[1px] bg-slate-200 dark:bg-[#2d3648] mx-2"></div>
             <button
               onClick={handleRun}
               disabled={isRunning}
-              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-md font-medium shadow-lg shadow-emerald-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-              {isRunning ? <Zap size={16} className="animate-spin" /> : <Zap size={16} />}
-              {isRunning ? 'Running Diagnostics...' : 'Run Auto-Diagnostics'}
+              className="flex items-center gap-2 px-3 md:px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            >
+              {isRunning ? <Zap size={16} className="animate-spin" /> : <Download size={16} />}
+              <span className="hidden md:inline">{isRunning ? 'Running Scan...' : 'Run Diagnostics'}</span>
+              <span className="md:hidden">{isRunning ? 'Scanning' : 'Scan'}</span>
             </button>
           </div>
         </header>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <StatCard
-            label="Active Targets"
-            value={MOCK_BUSINESSES.length}
-            icon={<Search className="text-blue-400" />}
+        <div className="p-8 space-y-8 flex-1 overflow-y-auto">
+          {/* Onboarding Modals */}
+          {showWelcomeModal && (
+            <WelcomeModal
+              onClose={() => setShowWelcomeModal(false)}
+              onStartTour={handleStartTour}
+            />
+          )}
+          {showWizard && (
+            <AddBusinessWizard
+              onClose={() => setShowWizard(false)}
+              onComplete={() => {
+                setShowProgress(true);
+              }}
+            />
+          )}
+          {showProgress && (
+            <div className="mb-6">
+              <ProgressTracker onContinue={handleContinueSetup} />
+            </div>
+          )}
+
+          {/* Page Heading */}
+          <div className="flex flex-col gap-1">
+            <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Revenue Health Overview</h2>
+            <p className="text-slate-500 dark:text-slate-400">Real-time diagnostic of SMB operational efficiency and leak detection.</p>
+          </div>
+
+          {/* Stats Grid */}
+          <RevenueStats
+            detectedLeaks={detectedLeaksValue}
+            atRiskRevenue={atRiskRevenueValue}
+            efficiencyScore={efficiencyScore}
           />
-          <StatCard
-            label="Diagnostics Run"
-            value={MOCK_DIAGNOSTICS.length}
-            icon={<Activity className="text-purple-400" />}
-          />
-          <StatCard
-            label="Gaps Identified"
-            value={MOCK_GAPS.length}
-            icon={<AlertTriangle className="text-amber-400" />}
-          />
-          <StatCard
-            label="Revenue Secured"
-            value={`$${MOCK_SUBSCRIPTIONS.length * 99}.00`}
-            icon={<ShieldCheck className="text-emerald-400" />}
-          />
+
+          {/* Middle Content: Sales Intelligence & Funnel */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Sales Intelligence Module */}
+            <SalesIntelligence />
+            {/* Funnel Leak Map */}
+            <FunnelLeakMap />
+          </div>
+
+          {/* Bottom Section: SOP Compliance */}
+          <SOPComplianceTable />
+
+          {/* Footer */}
+          <footer className="pt-8 mt-auto border-t border-slate-200 dark:border-[#2d3648] flex justify-between items-center text-slate-500 text-xs text-center md:text-left">
+            <p>© 2026 Agentic AI Operating System. Diagnostic Node: US-EAST-01</p>
+            <div className="flex gap-6 justify-center md:justify-end">
+              <a className="hover:text-primary transition-colors" href="#">Documentation</a>
+              <a className="hover:text-primary transition-colors" href="#">API Status</a>
+              <a className="hover:text-primary transition-colors" href="#">Terms of Service</a>
+            </div>
+          </footer>
         </div>
-
-        {/* Content Area */}
-        <div className="grid grid-cols-3 gap-8">
-          {/* Main Feed */}
-          <div className="col-span-2 space-y-6">
-            <div className="bg-slate-900 border border-slate-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Live System Log</h3>
-              <div className="space-y-4 max-h-[400px] overflow-y-auto">
-                {MOCK_DIAGNOSTICS.length === 0 ? (
-                  <div className="text-center py-12 text-slate-500 border-2 border-dashed border-slate-800 rounded-lg">
-                    <Activity className="mx-auto mb-2 opacity-50" size={32} />
-                    <p>System is idle. Waiting for diagnostic tasks...</p>
-                  </div>
-                ) : (
-                  MOCK_DIAGNOSTICS.slice().reverse().map(log => {
-                    const gap = MOCK_GAPS.find(g => g.diagnosticLogId === log.id);
-                    const biz = MOCK_BUSINESSES.find(b => b.id === log.businessId);
-                    return (
-                      <div key={log.id} className="border-l-2 border-slate-700 pl-4 py-1">
-                        <div className="flex justify-between">
-                          <span className="text-xs text-slate-500">{log.timestampSent.toLocaleTimeString()}</span>
-                          <span className={`text-xs font-bold ${log.result === 'SUCCESS' ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {log.result}
-                          </span>
-                        </div>
-                        <p className="text-slate-300 text-sm mt-1">
-                          {log.channel} Probe for {biz?.name}: <span className="text-slate-400">{log.evidence}</span>
-                        </p>
-                        {gap && (
-                          <div className="mt-2 bg-red-500/10 border border-red-500/20 p-2 rounded text-xs text-red-300 flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                              <AlertTriangle size={12} />
-                              GAP DETECTED: {gap.title}
-                            </div>
-                            {/* System 11: Impact Analysis */}
-                            <div className="mt-2 text-right">
-                              <form action={async () => {
-                                const res = await generateLossEstimateAction(gap.businessId, gap.id);
-                                if (res.success && res.estimate) {
-                                  alert(`IMPACT ANALYSIS:\n\nEst. Monthly Loss: $${res.estimate.minMonthlyLoss} - $${res.estimate.maxMonthlyLoss}\n\nConfidence: ${res.estimate.confidence}\n\nAssumptions:\n- ${res.estimate.assumptions.join('\n- ')}\n\n${res.estimate.disclaimer}`);
-                                } else {
-                                  alert("Could not estimate loss for this gap type (low confidence).");
-                                }
-                              }}>
-                                <button type="submit" className="text-[10px] uppercase tracking-wider text-slate-500 hover:text-slate-300 transition-colors border-b border-transparent hover:border-slate-300">
-                                  Analyze Impact
-                                </button>
-                              </form>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Sidebar Area */}
-          <div className="col-span-1 space-y-6">
-            <div className="bg-slate-900 border border-slate-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Target Health</h3>
-              <div className="space-y-3">
-                {MOCK_BUSINESSES.map(biz => {
-                  const activeGap = MOCK_GAPS.find(g => g.businessId === biz.id);
-                  // [GOVERNANCE] Calculate Confidence (Mock logic, should match server)
-                  let confidenceScore = 0.5;
-                  if (activeGap?.type === 'BROKEN_FORM') confidenceScore = 0.95;
-                  else if (activeGap?.type === 'SLOW_RESPONSE') confidenceScore = 0.9;
-                  else if (activeGap?.type === 'MISSED_FOLLOWUP') confidenceScore = 0.85;
-                  else if (activeGap) confidenceScore = 0.6;
-
-                  // [GOVERNANCE] RULE: Silence is Default. Hide if no gap OR low confidence (<0.6)
-                  // However, for the demo "Scan New Target" we want to show the card initially, 
-                  // but maybe hide the *details* until diagnostics run. 
-                  // Let's hide the specific 'Live System Log' details if empty.
-                  const bizLogs = diagnosticLogs[biz.id] || [];
-                  const showDetails = bizLogs.length > 0;
-
-                  return (
-                    <div key={biz.id} className="p-3 bg-slate-950 rounded border border-slate-800/50">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <div className="text-sm font-medium text-slate-200">{biz.name}</div>
-                          <div className="text-xs text-slate-500">{biz.primaryChannel}</div>
-                        </div>
-                        <div className={`w-2 h-2 rounded-full ${biz.status === 'CUSTOMER' ? 'bg-emerald-500' :
-                          activeGap ? 'bg-amber-500' : 'bg-slate-700'
-                          }`}></div>
-                      </div>
-
-                      {/* Status Label */}
-                      <div className="text-xs text-slate-400 capitalize">
-                        {biz.status === 'CUSTOMER' ? 'Start: ' + new Date().toLocaleDateString() :
-                          activeGap ? 'Gap Detected' : 'Monitoring'}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div >
-      </div >
-    </DashboardLayout >
-  );
-}
-
-function StatCard({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
-  return (
-    <div className="bg-slate-900 border border-slate-800 p-5 rounded-lg">
-      <div className="flex justify-between items-start mb-2">
-        <span className="text-slate-400 text-sm font-medium">{label}</span>
-        {icon}
       </div>
-      <div className="text-2xl font-bold text-white">{value}</div>
-    </div>
+    </DashboardLayout>
   );
 }

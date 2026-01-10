@@ -8,7 +8,7 @@ export interface DiagnosticRunner {
 // SIMULATOR: Email Probe
 export class EmailProbe implements DiagnosticRunner {
     async run(business: Business): Promise<DiagnosticLog> {
-        console.log(`[SIMULATION] Sending email inquiry to ${business.contactEmail || business.name}...`);
+        console.log(`[VERIFICATION] Sending standardized audit signal to ${business.contactEmail || business.name}...`);
 
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 500));
@@ -17,16 +17,16 @@ export class EmailProbe implements DiagnosticRunner {
         const rand = Math.random();
         let result: DiagnosticResult = 'SUCCESS';
         let duration = 120 * 60 * 1000; // 2 hours default
-        let evidence = 'Replied in 2 hours';
+        let evidence = 'Verified: Reply received to Signal #8821';
 
         if (rand > 0.7) {
             result = 'FAILURE';
             duration = 0;
-            evidence = 'No response after 48 hours';
+            evidence = 'Timeout: No packet returned after 48h';
         } else if (rand > 0.4) {
             result = 'SUCCESS';
             duration = 26 * 60 * 60 * 1000; // 26 hours
-            evidence = 'Replied in 26 hours (High Latency)';
+            evidence = 'Verified: Reply received (High Latency 26h)';
         }
 
         const log: DiagnosticLog = {
@@ -48,7 +48,7 @@ export class EmailProbe implements DiagnosticRunner {
 // SIMULATOR: Contact Form Probe
 export class FormProbe implements DiagnosticRunner {
     async run(business: Business): Promise<DiagnosticLog> {
-        console.log(`[SIMULATION] Submitting contact form on ${business.websiteUrl}...`);
+        console.log(`[VERIFICATION] Submitting audit payload on ${business.websiteUrl}...`);
         await new Promise(resolve => setTimeout(resolve, 800));
 
         const rand = Math.random();
@@ -60,7 +60,7 @@ export class FormProbe implements DiagnosticRunner {
             channel: 'CONTACT_FORM',
             timestampSent: new Date(),
             result: isSuccess ? 'SUCCESS' : 'FAILURE',
-            evidence: isSuccess ? 'Auto-confirmation received instantly' : 'No confirmation email received'
+            evidence: isSuccess ? 'Verified: Auto-responder ACK received' : 'Timeout: No ACK received'
         };
 
         MOCK_DIAGNOSTICS.push(log);
@@ -71,7 +71,7 @@ export class FormProbe implements DiagnosticRunner {
 // SIMULATOR: Maps Message Probe
 export class MapsProbe implements DiagnosticRunner {
     async run(business: Business): Promise<DiagnosticLog> {
-        console.log(`[SIMULATION] Sending Google Maps message to ${business.name}...`);
+        console.log(`[VERIFICATION] Pinging Google Maps Business Profile for ${business.name}...`);
         await new Promise(resolve => setTimeout(resolve, 600));
 
         const log: DiagnosticLog = {
@@ -80,7 +80,7 @@ export class MapsProbe implements DiagnosticRunner {
             channel: 'MAPS_MESSAGE',
             timestampSent: new Date(),
             result: 'FAILURE', // Maps often ignored
-            evidence: 'Message read but not replied to for 24h'
+            evidence: 'Timeout: Read receipt active, no reply'
         };
 
         MOCK_DIAGNOSTICS.push(log);

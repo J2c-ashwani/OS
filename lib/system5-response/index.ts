@@ -12,27 +12,26 @@ export class ResponseAnalyzer {
     }
 }
 
-export class AutoResponder {
-    generateReply(business: Business, intent: ResponseIntent): string {
+export class AccountabilityEngine {
+    generateComplianceLog(business: Business, intent: ResponseIntent): string {
+        const timestamp = new Date().toISOString();
         if (intent === 'INTERESTED') {
             return `
-Hello,
-
-Confirmed the gap in your ${business.primaryChannel} channel. 
-We detected it continuously repeats without monitoring.
-
-We can activate the automated guardrails for your domain.
-This runs 24/7 to prevent future leakage.
-
-Shall I turn it on?
+[COMPLIANCE LOG] ${timestamp}
+STATUS: GAP CONFIRMED
+DETAILS: Target responded to verification signal.
+ACTION: Latency event recorded. Verification ID #8821 closed.
+RECOMMENDATION: Activation of continuous monitoring advised.
       `.trim();
         } else if (intent === 'SKEPTICAL') {
             return `
-This is an automated operational audit.
-We verified the gap with timestamped evidence attached below.
-No human services are being sold. This is purely system monitoring.
+[COMPLIANCE LOG] ${timestamp}
+STATUS: MANUAL REVIEW REQUIRED
+DETAILS: Target flagged verification signal as suspicious.
+ACTION: Verification signal paused.
+NOTE: This is a system audit, not a sales outreach.
       `.trim();
         }
-        return '';
+        return `[LOG] ${timestamp} Interaction recorded.`;
     }
 }

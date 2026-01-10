@@ -1,7 +1,15 @@
 import Link from 'next/link';
-import { ShieldCheck, Users, Activity, Database, Settings as SettingsIcon } from 'lucide-react';
+import { ShieldCheck, Users, Activity, Database, Settings as SettingsIcon, AlertCircle } from 'lucide-react';
+import { getAdminStatsAction, getRecentActivityAction } from '@/app/actions/admin';
 
-export default function AdminConsolePage() {
+export default async function AdminConsolePage() {
+    // Fetch real data
+    const statsResult = await getAdminStatsAction();
+    const activityResult = await getRecentActivityAction();
+
+    const stats = statsResult.success ? statsResult.data : null;
+    const activity = activityResult.success ? activityResult.data : [];
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#0B0E13] to-[#0A0A0A] text-gray-200">
             <div className="container mx-auto px-6 py-16">
@@ -14,39 +22,48 @@ export default function AdminConsolePage() {
                 </div>
 
                 {/* System Stats */}
-                <div className="grid grid-cols-4 gap-6 mb-8">
-                    <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-6">
-                        <div className="flex items-center gap-3 mb-2">
-                            <Users size={20} className="text-emerald-500" />
-                            <span className="text-sm text-gray-500">Total Users</span>
+                {stats ? (
+                    <div className="grid grid-cols-4 gap-6 mb-8">
+                        <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-6">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Users size={20} className="text-emerald-500" />
+                                <span className="text-sm text-gray-500">Total Users</span>
+                            </div>
+                            <div className="text-3xl font-bold text-white">{stats.totalUsers}</div>
                         </div>
-                        <div className="text-3xl font-bold text-white">0</div>
-                    </div>
 
-                    <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-6">
-                        <div className="flex items-center gap-3 mb-2">
-                            <Activity size={20} className="text-blue-500" />
-                            <span className="text-sm text-gray-500">Active Subscriptions</span>
+                        <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-6">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Activity size={20} className="text-blue-500" />
+                                <span className="text-sm text-gray-500">Active Subscriptions</span>
+                            </div>
+                            <div className="text-3xl font-bold text-white">{stats.activeSubscriptions}</div>
                         </div>
-                        <div className="text-3xl font-bold text-white">0</div>
-                    </div>
 
-                    <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-6">
-                        <div className="flex items-center gap-3 mb-2">
-                            <Database size={20} className="text-yellow-500" />
-                            <span className="text gray-500">Total Businesses</span>
+                        <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-6">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Database size={20} className="text-yellow-500" />
+                                <span className="text-sm text-gray-500">Total Businesses</span>
+                            </div>
+                            <div className="text-3xl font-bold text-white">{stats.totalBusinesses}</div>
                         </div>
-                        <div className="text-3xl font-bold text-white">12</div>
-                    </div>
 
-                    <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-6">
-                        <div className="flex items-center gap-3 mb-2">
-                            <ShieldCheck size={20} className="text-purple-500" />
-                            <span className="text-sm text-gray-500">Scans Today</span>
+                        <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-6">
+                            <div className="flex items-center gap-3 mb-2">
+                                <ShieldCheck size={20} className="text-purple-500" />
+                                <span className="text-sm text-gray-500">Scans Today</span>
+                            </div>
+                            <div className="text-3xl font-bold text-white">{stats.scansToday}</div>
                         </div>
-                        <div className="text-3xl font-bold text-white">24</div>
                     </div>
-                </div>
+                ) : (
+                    <div className="bg-red-900/20 border border-red-900/40 rounded-lg p-6 mb-8">
+                        <div className="flex items-center gap-3 text-red-400">
+                            <AlertCircle size={20} />
+                            <span>Failed to load system stats</span>
+                        </div>
+                    </div>
+                )}
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-2 gap-6">
@@ -62,15 +79,36 @@ export default function AdminConsolePage() {
                     <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-8">
                         <Database size={24} className="text-blue-500 mb-3" />
                         <h3 className="text-xl font-semibold text-white mb-2">Database Status</h3>
-                        <p className="text-sm text-gray-400">Mock mode active • 12 businesses • 24 diagnostics</p>
+                        <p className="text-sm text-gray-400">
+                            {stats ? `${stats.totalBusinesses} businesses • ${stats.scansToday} scans today` : 'Loading...'}
+                        </p>
                     </div>
                 </div>
 
                 {/* Recent Activity */}
                 <div className="mt-8 bg-[#111]/50 border border-gray-900 rounded-lg p-6">
                     <h3 className="text-lg font-semibold text-white mb-4">Recent System Activity</h3>
-                    <div className="space-y-3 text-sm text-gray-400">
-                        <div>No recent activity</div>
+                    <div className="space-y-3">
+                        {activity && activity.length > 0 ? (
+                            activity.map((event) => (
+                                <div key={event.id} className="flex items-start gap-3 text-sm border-b border-gray-900 pb-3 last:border-0">
+                                    <div className="mt-0.5">
+                                        {event.type === 'DIAGNOSTIC' && <ShieldCheck size={16} className="text-emerald-500" />}
+                                        {event.type === 'GAP' && <AlertCircle size={16} className="text-red-500" />}
+                                        {event.type === 'ALERT' && <Activity size={16} className="text-yellow-500" />}
+                                        {event.type === 'SUBSCRIPTION' && <Users size={16} className="text-blue-500" />}
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="text-gray-300">{event.description}</div>
+                                        <div className="text-xs text-gray-600 mt-1">
+                                            {new Date(event.timestamp).toLocaleString()}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-gray-400 text-sm">No recent activity</div>
+                        )}
                     </div>
                 </div>
             </div>

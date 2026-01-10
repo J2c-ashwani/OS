@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ----------------------------------------------------------------------
+// SYSTEMS 1-3 Core Entities
+// ----------------------------------------------------------------------
+
+model Business {
+  id              String   @id @default(cuid())
+  name            String
+  websiteUrl      String
+  contactEmail    String? // Made optional as we might only have domain first
+  status          String   @default("TARGET") // TARGET, ACTIVE, CHURNED
+  subscription    String   @default("NONE") // NONE, BASIC, PRO, ENTERPRISE
+  primaryChannel  String   @default("EMAIL")
+  
+  // Additional Details
+  industry        String?
+  contactName     String? // New: Stores "John Doe"
+  contactRole     String? // New: Stores "CEO", "Founder"
+  contactPhone    String?
+  address         String?
+  
+  // Relations
+  logs            DiagnosticLog[]
+  gaps            Gap[]
+  alerts          Alert[]
+  healthChecks    HealthCheck[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ----------------------------------------------------------------------
+// SYSTEM 1: Diagnostics
+// ----------------------------------------------------------------------
+
+model DiagnosticLog {
+  id                 String    @id @default(cuid())
+  channel            String    // EMAIL, CONTACT_FORM, MAPS_MESSAGE
+  timestampSent      DateTime  @default(now())
+  timestampReplied   DateTime?
+  responseDurationMs Int?
+  result             String    // SUCCESS, FAILURE
+  evidence           String?
+  
+  businessId         String
+  business           Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Gap {
+  id          String   @id @default(cuid())
+  type        String   // SLOW_RESPONSE, BROKEN_FORM, MISSED_FOLLOWUP
+  severity    String   // HIGH, MEDIUM, LOW
+  detectedAt  DateTime @default(now())
+  status      String   @default("OPEN") // OPEN, RESOLVED
+  description String
+  
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Alert {
+  id          String   @id @default(cuid())
+  type        String   // GAP_FOUND, WEEKLY_REPORT
+  channel     String   // EMAIL, SMS, DASHBOARD
+  status      String   // SENT, DELIVERED, OPENED
+  sentAt      DateTime @default(now())
+  content     String
+  
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------------------
+// SYSTEM 2: Health Monitoring
+// ----------------------------------------------------------------------
+
+model HealthCheck {
+  id          String   @id @default(cuid())
+  status      String   // HEALTHY, DEGRADED, DOWN
+  latency     Int
+  checkedAt   DateTime @default(now())
+  
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}

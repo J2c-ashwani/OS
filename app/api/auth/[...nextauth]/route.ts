@@ -1,7 +1,7 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -46,7 +46,7 @@ const handler = NextAuth({
         async session({ session, token }) {
             if (session.user) {
                 session.user.role = token.role
-                session.user.id = token.id
+                session.user.id = token.id || ""
             }
             return session
         }
@@ -55,6 +55,8 @@ const handler = NextAuth({
         strategy: "jwt",
     },
     secret: process.env.NEXTAUTH_SECRET || "development-secret-key-change-in-production",
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

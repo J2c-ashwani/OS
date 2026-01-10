@@ -53,7 +53,11 @@ export interface Alert {
   gapId: string;
   sentAt: Date;
   channel: 'EMAIL'; // Outreach channel
-  content: string; // The neutral, factual message
+  content: string; // The neutral, factual message -- DEPRECATED for UI, keeping for backend logic if needed
+  title: string;
+  message: string;
+  severity: 'CRITICAL' | 'WARNING' | 'INFO';
+  timestamp: Date;
   status: 'SENT' | 'OPENED' | 'CLICKED' | 'REPLIED';
 }
 

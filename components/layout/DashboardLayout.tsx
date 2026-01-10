@@ -1,7 +1,9 @@
 'use client'
 
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, Users, Activity, Settings, Bell, ShieldAlert, LogOut } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { LayoutDashboard, Users, Activity, Settings, Bell, ShieldAlert, LogOut, LineChart, Filter, FileText, Menu, X } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
 export default function DashboardLayout({
@@ -9,11 +11,42 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const pathname = usePathname();
+
     return (
         <div className="flex h-screen bg-slate-950 text-slate-100 font-sans antialiased overflow-hidden">
+            {/* Mobile Header */}
+            <header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-slate-800 z-40 flex items-center justify-between px-4">
+                <div className="flex items-center gap-2 font-bold text-emerald-400">
+                    <ShieldAlert className="w-6 h-6" />
+                    <span>BizOS</span>
+                </div>
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-2 text-slate-400 hover:text-white transition-colors"
+                >
+                    {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+            </header>
+
+            {/* Mobile Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-64 border-r border-slate-800 bg-slate-900 flex flex-col">
-                <div className="p-6 border-b border-slate-800">
+            <aside
+                className={`
+                    fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-300 ease-in-out
+                    md:relative md:translate-x-0
+                    ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                `}
+            >
+                <div className="p-6 border-b border-slate-800 hidden md:block">
                     <h1 className="text-xl font-bold tracking-tight text-emerald-400 flex items-center gap-2">
                         <ShieldAlert className="w-6 h-6" />
                         BizOS Agent
@@ -21,12 +54,22 @@ export default function DashboardLayout({
                     <p className="text-xs text-slate-500 mt-1">Autonomous Auditor v0.1</p>
                 </div>
 
-                <nav className="flex-1 p-4 space-y-2">
-                    <NavItem href="/app/dashboard" icon={<LayoutDashboard />} label="Dashboard" active />
-                    <NavItem href="/app/businesses" icon={<Users />} label="Businesses" />
-                    <NavItem href="/app/monitoring" icon={<Activity />} label="Health Checks" />
-                    <NavItem href="/app/alerts" icon={<Bell />} label="Alerts" />
-                    <NavItem href="/app/settings" icon={<Settings />} label="Settings" />
+                <div className="p-4 md:hidden border-b border-slate-800 flex items-center justify-between">
+                    <span className="font-bold text-emerald-400">Navigation</span>
+                    <button onClick={() => setIsSidebarOpen(false)} className="text-slate-400"><X size={20} /></button>
+                </div>
+
+                <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <NavItem href="/app/dashboard" icon={<LayoutDashboard />} label="Dashboard" active={pathname === '/app/dashboard'} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/funnel" icon={<Filter />} label="Funnel Tracker" active={pathname.startsWith('/app/funnel')} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/roi" icon={<LineChart />} label="ROI Tracker" active={pathname.startsWith('/app/roi')} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/sop" icon={<ShieldAlert />} label="SOP Enforcement" active={pathname.startsWith('/app/sop')} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/reports" icon={<FileText />} label="Reports" active={pathname.startsWith('/app/reports')} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/intelligence" icon={<LineChart />} label="Intelligence" active={pathname.startsWith('/app/intelligence')} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/businesses" icon={<Users />} label="Businesses" active={pathname.startsWith('/app/businesses')} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/monitoring" icon={<Activity />} label="Health Checks" active={pathname.startsWith('/app/monitoring')} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/alerts" icon={<Bell />} label="Alerts" active={pathname.startsWith('/app/alerts')} onClick={() => setIsSidebarOpen(false)} />
+                    <NavItem href="/app/settings" icon={<Settings />} label="Settings" active={pathname.startsWith('/app/settings')} onClick={() => setIsSidebarOpen(false)} />
                 </nav>
 
                 <div className="p-4 border-t border-slate-800">
@@ -48,17 +91,21 @@ export default function DashboardLayout({
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-auto bg-slate-950">
-                {children}
+            <main className="flex-1 overflow-auto bg-slate-950 w-full">
+                <div className="md:hidden h-16" /> {/* Spacer for header */}
+                <div className="p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto">
+                    {children}
+                </div>
             </main>
         </div>
     );
 }
 
-function NavItem({ href, icon, label, active = false }: { href: string; icon: React.ReactNode; label: string; active?: boolean }) {
+function NavItem({ href, icon, label, active = false, onClick }: { href: string; icon: React.ReactNode; label: string; active?: boolean, onClick?: () => void }) {
     return (
         <Link
             href={href}
+            onClick={onClick}
             className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors
         ${active
                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
@@ -70,5 +117,3 @@ function NavItem({ href, icon, label, active = false }: { href: string; icon: Re
         </Link>
     );
 }
-
-import React from 'react';

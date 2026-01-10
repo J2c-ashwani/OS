@@ -3,7 +3,7 @@ import { Business } from '../../types';
 export interface DecisionMaker {
     name: string;
     email: string;
-    role: 'OWNER' | 'CEO' | 'MANAGER' | 'GENERIC';
+    role: 'OWNER' | 'CEO' | 'MANAGER' | 'GENERIC' | 'Managing Director' | 'VP of Operations' | 'Founder';
     confidence: number;
 }
 
