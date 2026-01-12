@@ -30,7 +30,7 @@ export default function PublicReport({ business }: PublicReportProps) {
                         <div className="size-8 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-500 font-bold border border-emerald-500/20">
                             <Activity size={18} />
                         </div>
-                        <span className="font-bold text-white text-lg tracking-tight">Response Monitor</span>
+                        <span className="font-bold text-white text-lg tracking-tight">Response Audit</span>
                     </div>
                     <button className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-white transition-colors">
                         <Download size={16} /> Export Audit Log

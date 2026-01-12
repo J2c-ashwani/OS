@@ -103,7 +103,7 @@ export default function PublicAuditPage() {
                     <div className="size-9 flex items-center justify-center bg-primary rounded-xl text-white shadow-lg shadow-primary/20">
                         <Bot size={22} />
                     </div>
-                    <h2 className="text-[#0f172a] dark:text-white text-xl font-extrabold tracking-tight">AuditOS</h2>
+                    <h2 className="text-[#0f172a] dark:text-white text-xl font-extrabold tracking-tight">Response Audit</h2>
                 </div>
                 <div className="flex flex-1 justify-end gap-10 items-center">
                     <nav className="hidden md:flex items-center gap-8">
@@ -465,7 +465,7 @@ export default function PublicAuditPage() {
                                     Stop guessing. Start <span className="text-primary">Optimizing</span>.
                                 </h2>
                                 <p className="text-slate-400 text-lg md:text-xl max-w-[600px]">
-                                    Join thousands of SMBs using AuditOS to transform their operations into a high-performance engine.
+                                    Join thousands of SMBs using Response Audit to transform their operations into a high-performance engine.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 mt-4 w-full justify-center">
                                     <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-primary text-white hover:bg-blue-700 h-16 px-10 rounded-2xl font-black text-lg transition-all shadow-xl shadow-primary/20 flex items-center justify-center">
@@ -489,7 +489,7 @@ export default function PublicAuditPage() {
                                 <div className="size-8 flex items-center justify-center bg-primary rounded-lg text-white">
                                     <Bot size={18} />
                                 </div>
-                                <h2 className="text-[#0f172a] dark:text-white text-xl font-extrabold tracking-tight">AuditOS</h2>
+                                <h2 className="text-[#0f172a] dark:text-white text-xl font-extrabold tracking-tight">Response Audit</h2>
                             </div>
                             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
                                 The world's first Agentic AI Operating System designed specifically for the operational needs of modern SMBs.
@@ -533,7 +533,7 @@ export default function PublicAuditPage() {
                         </div>
                     </div>
                     <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <p className="text-sm text-slate-400 font-medium">© 2026 AuditOS Agentic AI Inc. All rights reserved.</p>
+                        <p className="text-sm text-slate-400 font-medium">© 2026 Response Audit Inc. All rights reserved.</p>
                         <div className="flex items-center gap-6 text-slate-400">
                             <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-tighter"><Globe size={14} /> Global Hub</span>
                             <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-tighter"><BadgeCheck size={14} /> SOC2 Certified</span>
