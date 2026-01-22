@@ -158,8 +158,15 @@ export default function PublicReport({ business }: PublicReportProps) {
                             >
                                 <Activity size={18} /> Enable Continuous Monitoring
                             </button>
-                            <button className="bg-slate-800 hover:bg-slate-700 text-white h-14 px-8 rounded-xl font-bold text-sm transition-all w-full sm:w-auto">
-                                Download Log (PDF)
+                            <button
+                                onClick={() => {
+                                    // Trigger PDF download
+                                    window.open(`/api/report/${business.id}/pdf`, '_blank');
+                                }}
+                                className="bg-slate-800 hover:bg-slate-700 text-white h-14 px-8 rounded-xl font-bold text-sm transition-all w-full sm:w-auto flex items-center justify-center gap-2"
+                            >
+                                <Download size={18} />
+                                Download Risk Report (PDF)
                             </button>
                         </div>
                         <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest pt-4">

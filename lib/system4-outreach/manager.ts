@@ -17,7 +17,9 @@ export class OutreachManager {
         const role = business.contactRole || 'Founder';
         const primaryGap = gaps[0]; // Focus on the highest priority gap
 
-        const reportUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/report/${business.id}`;
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        const reportUrl = `${baseUrl}/report/${business.id}`;
+        const pdfUrl = `${baseUrl}/api/report/${business.id}/pdf`;
 
         return {
             subject: `Question regarding ${business.name}'s ${primaryGap.type.toLowerCase().replace('_', ' ')}`,
@@ -30,8 +32,17 @@ I noticed ${business.name} has a strong market presence, but I detected a critic
 
 As the ${role}, you know that operational reliability is critical. My diagnostic node 7 has confirmed this gap which could be costing you lost revenue.
 
-You can view your confidential Executive Report here:
+📊 VIEW YOUR EXECUTIVE REPORT:
 ${reportUrl}
+
+📄 DOWNLOAD PDF RISK REPORT:
+${pdfUrl}
+
+The attached report includes:
+• Risk severity assessment
+• Estimated compliance exposure in USD
+• Verified deviations with timestamps
+• Potential consequences if unaddressed
 
 Would you be open to a 30-second automated audit?
 
