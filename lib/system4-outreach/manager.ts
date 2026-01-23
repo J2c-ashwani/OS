@@ -7,7 +7,7 @@ export class OutreachManager {
     /**
      * Generates a personalized cold email for a C-Level executive.
      */
-    generateEmail(business: Business, gaps: Gap[]): { subject: string; body: string } | null {
+    generateEmail(business: Business & { emailCount: number }, gaps: Gap[]): { subject: string; body: string } | null {
         // ACCURACY CHECK: If no gaps, do not send "problem" email.
         if (!gaps || gaps.length === 0) {
             return null;
@@ -26,9 +26,14 @@ export class OutreachManager {
         const pricing = getPricingByDomain(business.websiteUrl);
         const scarcityMsg = getScarcityMessage(pricing);
 
-        return {
-            subject: `Question regarding ${business.name}'s ${primaryGap.type.toLowerCase().replace('_', ' ')}`,
-            body: `
+        // SEQUENCE LOGIC
+        const step = business.emailCount || 0;
+
+        // EMAIL 1: INITIAL OUTREACH (Day 0)
+        if (step === 0) {
+            return {
+                subject: `Question regarding ${business.name}'s ${primaryGap.type.toLowerCase().replace('_', ' ')}`,
+                body: `
 Hi ${firstName},
 
 I'm an autonomous agent analyzing high-growth companies in the ${business.industry || 'tech'} space.
@@ -55,14 +60,63 @@ Would you be open to a 30-second automated audit?
 
 Best,
 BizOS Agent
-            `.trim()
-        };
+                `.trim()
+            };
+        }
+
+        // EMAIL 2: BUMP / VALUE AD (Day 2)
+        if (step === 1) {
+            return {
+                subject: `Did you see the risk report for ${business.name}?`,
+                body: `
+Hi ${firstName},
+
+I wanted to make sure you saw the autonomous risk report I generated for ${business.name} earlier this week.
+
+The diagnostic system flagged a ${primaryGap.severity.toLowerCase()} severity deviation that is likely affecting your conversion rates.
+
+You can still access the secure report here:
+${reportUrl}
+
+If you're unsure why this matters: Our data suggests companies with unmonitored response channels lose ~15% of inbound leads.
+
+${scarcityMsg}
+
+Best,
+BizOS Agent
+                `.trim()
+            };
+        }
+
+        // EMAIL 3: FINAL / BREAKUP (Day 5)
+        if (step === 2) {
+            return {
+                subject: `Closing ${business.name}'s audit file`,
+                body: `
+Hi ${firstName},
+
+I haven't heard back, so I'm assuming fixing the detected response gaps at ${business.name} isn't a priority right now.
+
+I'll be archiving your audit file in 24 hours.
+
+If you decide later that you want to automate your reliability monitoring, you can always reactivate your status here:
+${reportUrl}
+
+Note: The "Founding Client" locked pricing offer expires when I close this file.
+
+Best,
+BizOS Agent
+                `.trim()
+            };
+        }
+
+        return null; // Sequence complete
     }
 
     /**
      * Simulates sending the email and logging it to the database.
      */
-    async sendOutreach(business: Business, gaps: Gap[]) {
+    async sendOutreach(business: Business & { emailCount: number }, gaps: Gap[]) {
         if (!business.contactEmail) {
             console.log(`[OUTREACH] Skipped ${business.name}: No email found.`);
             return false;
@@ -72,7 +126,7 @@ BizOS Agent
         const email = this.generateEmail(business, gaps);
 
         if (!email) {
-            console.log(`[OUTREACH] Skipped ${business.name}: No critical gaps found to report.`);
+            console.log(`[OUTREACH] Skipped ${business.name}: No critical gaps found or sequence complete.`);
             return false;
         }
 
@@ -93,10 +147,14 @@ BizOS Agent
             }
         });
 
-        // Update Business Status
+        // Update Business Status & Stats
         await db.business.update({
             where: { id: business.id },
-            data: { status: 'POC' } // Move to "Proof of Concept" / Contacted stage
+            data: {
+                status: 'POC',
+                lastEmailedAt: new Date(),
+                emailCount: { increment: 1 }
+            }
         });
 
         return true;

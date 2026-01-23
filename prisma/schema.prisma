@@ -26,6 +26,10 @@ model Business {
   contactPhone    String?
   address         String?
   
+  // Outreach Tracking
+  lastEmailedAt   DateTime? // Tracks when the last email was sent
+  emailCount      Int      @default(0) // Tracks how many emails in the sequence have been sent
+  
   // Relations
   logs            DiagnosticLog[]
   gaps            Gap[]
