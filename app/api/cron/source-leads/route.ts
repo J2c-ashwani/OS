@@ -55,6 +55,8 @@ export async function GET() {
                     }
                 });
 
+                console.log(`[CRON] Added lead ${newBiz.name} (Score: ${lead.score}/100)`);
+
                 const createdGaps = [];
 
                 // Create Logic from Audit Result
@@ -76,7 +78,9 @@ export async function GET() {
                 // Only sends if gaps exist
                 const { OutreachManager } = await import('@/lib/system4-outreach/manager');
                 const outreach = new OutreachManager();
-                const sent = await outreach.sendOutreach(newBiz, createdGaps);
+                // Explicitly satisfy the type requirement
+                const businessWithStats = { ...newBiz, emailCount: 0 };
+                const sent = await outreach.sendOutreach(businessWithStats, createdGaps);
 
                 addedCount++;
                 const statusStr = sent ? 'EMAILED' : 'SKIPPED (CLEAN)';
