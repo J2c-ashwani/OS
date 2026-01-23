@@ -21,6 +21,11 @@ export class OutreachManager {
         const reportUrl = `${baseUrl}/report/${business.id}`;
         const pdfUrl = `${baseUrl}/api/report/${business.id}/pdf`;
 
+        // Geo-Pricing & Scarcity Logic
+        const { getPricingByDomain, getScarcityMessage } = require('@/lib/services/geoPricing');
+        const pricing = getPricingByDomain(business.websiteUrl);
+        const scarcityMsg = getScarcityMessage(pricing);
+
         return {
             subject: `Question regarding ${business.name}'s ${primaryGap.type.toLowerCase().replace('_', ' ')}`,
             body: `
@@ -43,6 +48,8 @@ The attached report includes:
 • Estimated compliance exposure in USD
 • Verified deviations with timestamps
 • Potential consequences if unaddressed
+
+${scarcityMsg}
 
 Would you be open to a 30-second automated audit?
 
