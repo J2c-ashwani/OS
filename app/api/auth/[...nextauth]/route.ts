@@ -1,5 +1,8 @@
+
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { db } from "@/lib/db"
+import bcrypt from "bcryptjs"
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -10,25 +13,29 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                // Mock authentication for MVP
                 if (!credentials?.email || !credentials?.password) return null;
 
-                if (credentials.email === "admin@responseaudit.com" && credentials.password === "admin") {
-                    return {
-                        id: "1",
-                        email: credentials.email,
-                        name: "Admin User",
-                        role: "ADMIN"
-                    }
+                const user = await db.user.findUnique({
+                    where: { email: credentials.email },
+                });
+
+                if (!user) {
+                    // Keep the admin backdoor for convenience if desired, or remove entirely. Let's remove it for true production auth.
+                    return null;
                 }
 
-                // For the MVP Sign-Up/Sign-In flow, accept any validly formatted email
-                return {
-                    id: Math.random().toString(36).substring(7),
-                    email: credentials.email,
-                    name: credentials.email.split('@')[0],
-                    role: "CUSTOMER"
+                const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
+                if (!isPasswordValid) {
+                    return null;
                 }
+
+                return {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    role: user.role
+                };
             }
         })
     ],

@@ -19,6 +19,29 @@ export default function LoginPage() {
         setError('')
         setIsLoading(true)
 
+        if (!isLogin) {
+            // Registration mode
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                if (!res.ok) {
+                    const data = await res.json();
+                    setError(data.message || 'Registration failed');
+                    setIsLoading(false);
+                    return;
+                }
+            } catch (err) {
+                setError('An error occurred during registration');
+                setIsLoading(false);
+                return;
+            }
+        }
+
+        // Login (or auto-login after successful registration)
         const result = await signIn('credentials', {
             email,
             password,
@@ -28,7 +51,7 @@ export default function LoginPage() {
         setIsLoading(false)
 
         if (result?.error) {
-            setError('Invalid email or password')
+            setError(isLogin ? 'Invalid email or password' : 'Login failed after registration')
         } else {
             router.push('/app/dashboard')
             router.refresh()
@@ -48,7 +71,7 @@ export default function LoginPage() {
                         {isLogin ? 'Welcome Back' : 'Create an Account'}
                     </h1>
                     <p className="text-gray-400">
-                        {isLogin ? 'Sign in to access your dashboard' : 'Start your 14-day free trial today'}
+                        {isLogin ? 'Sign in to access your dashboard' : 'Create your account to get started'}
                     </p>
                 </div>
 
