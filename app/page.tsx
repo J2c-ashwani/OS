@@ -471,9 +471,9 @@ export default function PublicAuditPage() {
                                     <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-primary text-white hover:bg-blue-700 h-16 px-10 rounded-2xl font-black text-lg transition-all shadow-xl shadow-primary/20 flex items-center justify-center">
                                         Start Your Free Audit
                                     </button>
-                                    <button className="bg-slate-800 text-white hover:bg-slate-700 h-16 px-10 rounded-2xl font-bold text-lg border border-slate-700 transition-all flex items-center justify-center">
+                                    <Link href="/contact" className="bg-slate-800 text-white hover:bg-slate-700 h-16 px-10 rounded-2xl font-bold text-lg border border-slate-700 transition-all flex items-center justify-center">
                                         Book Strategy Call
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -495,39 +495,36 @@ export default function PublicAuditPage() {
                                 The world's first Agentic AI Operating System designed specifically for the operational needs of modern SMBs.
                             </p>
                             <div className="flex gap-4">
-                                <a className="size-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-primary transition-colors" href="#">
+                                <Link className="size-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-primary transition-colors" href="/contact">
                                     <AtSign size={20} />
-                                </a>
-                                <a className="size-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-primary transition-colors" href="#">
+                                </Link>
+                                <Link className="size-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-primary transition-colors" href="/contact">
                                     <Share2 size={20} />
-                                </a>
+                                </Link>
                             </div>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:col-span-3 gap-8">
                             <div className="space-y-6">
                                 <h4 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">Platform</h4>
                                 <ul className="space-y-4">
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Core Engine</a></li>
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Audit Marketplace</a></li>
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Agent Integrations</a></li>
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Security Stack</a></li>
+                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/#how-it-works">How it Works</Link></li>
+                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/#security">Security Stack</Link></li>
+                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/pricing">Pricing</Link></li>
                                 </ul>
                             </div>
                             <div className="space-y-6">
                                 <h4 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">Resources</h4>
                                 <ul className="space-y-4">
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Audit Framework</a></li>
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Success Stories</a></li>
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">API Docs</a></li>
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Agentic Blog</a></li>
+                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/#how-it-works">Audit Framework</Link></li>
+                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/about">About Us</Link></li>
+                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/contact">Contact</Link></li>
                                 </ul>
                             </div>
                             <div className="space-y-6">
-                                <h4 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">Company</h4>
+                                <h4 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">Legal</h4>
                                 <ul className="space-y-4">
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">About Us</a></li>
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Privacy Policy</a></li>
-                                    <li><a className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="#">Terms of Service</a></li>
+                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/privacy">Privacy Policy</Link></li>
+                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/terms">Terms of Service</Link></li>
                                 </ul>
                             </div>
                         </div>

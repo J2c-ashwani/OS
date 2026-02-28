@@ -23,7 +23,6 @@ export default function ROITrackerPage() {
                     </div>
                     <div className="flex gap-3">
                         <button
-                            onClick={() => alert("Date range selection is locked to 'Q4 2024' for this demo environment.")}
                             className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-[#1a202c] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-slate-50 dark:hover:bg-[#1a202c]/80 transition-all shadow-sm"
                         >
                             <Calendar size={18} className="mr-2" />

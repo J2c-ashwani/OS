@@ -153,9 +153,9 @@ export default function Dashboard() {
           <footer className="pt-8 mt-auto border-t border-slate-200 dark:border-[#2d3648] flex justify-between items-center text-slate-500 text-xs text-center md:text-left">
             <p>© 2026 Agentic AI Operating System. Diagnostic Node: US-EAST-01</p>
             <div className="flex gap-6 justify-center md:justify-end">
-              <a className="hover:text-primary transition-colors" href="#">Documentation</a>
-              <a className="hover:text-primary transition-colors" href="#">API Status</a>
-              <a className="hover:text-primary transition-colors" href="#">Terms of Service</a>
+              <a className="hover:text-primary transition-colors" href="/about">Documentation</a>
+              <a className="hover:text-primary transition-colors" href="/admin/system">API Status</a>
+              <a className="hover:text-primary transition-colors" href="/terms">Terms of Service</a>
             </div>
           </footer>
         </div>

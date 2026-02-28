@@ -1,6 +1,7 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import RuleCard from '@/components/sop/RuleCard';
 import { Search, Plus, Save, FileDown, Clock, Forward, Smile, ShieldCheck, ChevronRight } from 'lucide-react';
@@ -14,7 +15,7 @@ export default function RuleBuilderPage() {
                     {/* Header */}
                     <div className="p-6 md:p-10 pb-0">
                         <nav className="flex items-center gap-2 mb-4">
-                            <a href="#" className="text-slate-500 dark:text-slate-400 text-xs font-medium hover:text-primary">Settings</a>
+                            <Link href="/app/settings" className="text-slate-500 dark:text-slate-400 text-xs font-medium hover:text-primary">Settings</Link>
                             <ChevronRight size={12} className="text-slate-400" />
                             <span className="text-slate-900 dark:text-white text-xs font-semibold">SOP Rule Builder</span>
                         </nav>
@@ -37,15 +38,15 @@ export default function RuleBuilderPage() {
 
                         {/* Tabs */}
                         <div className="mt-8 border-b border-slate-200 dark:border-slate-800 flex gap-8">
-                            <a href="#" className="border-b-[3px] border-primary text-primary pb-3 text-sm font-bold flex items-center gap-2">
+                            <button className="border-b-[3px] border-primary text-primary pb-3 text-sm font-bold flex items-center gap-2">
                                 Active Rules <span className="bg-primary/10 text-primary text-[10px] px-1.5 py-0.5 rounded-full">12</span>
-                            </a>
-                            <a href="#" className="border-b-[3px] border-transparent text-slate-500 dark:text-slate-400 pb-3 text-sm font-bold hover:text-slate-900 dark:hover:text-white transition-colors">
+                            </button>
+                            <button className="border-b-[3px] border-transparent text-slate-500 dark:text-slate-400 pb-3 text-sm font-bold hover:text-slate-900 dark:hover:text-white transition-colors">
                                 Drafts <span className="bg-slate-200 dark:bg-slate-500/20 text-slate-500 text-[10px] px-1.5 py-0.5 rounded-full">3</span>
-                            </a>
-                            <a href="#" className="border-b-[3px] border-transparent text-slate-500 dark:text-slate-400 pb-3 text-sm font-bold hover:text-slate-900 dark:hover:text-white transition-colors">
+                            </button>
+                            <button className="border-b-[3px] border-transparent text-slate-500 dark:text-slate-400 pb-3 text-sm font-bold hover:text-slate-900 dark:hover:text-white transition-colors">
                                 Archived
-                            </a>
+                            </button>
                         </div>
                     </div>
 
