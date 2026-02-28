@@ -34,6 +34,8 @@ import {
 } from 'lucide-react';
 import PostAuditBridge from '@/components/conversion/PostAuditBridge';
 import AuditProcessing from '@/components/audit/AuditProcessing';
+import { SiteHeader } from '@/components/marketing/SiteHeader';
+import { SiteFooter } from '@/components/marketing/SiteFooter';
 import PublicNav from '@/components/layout/PublicNav'; // Re-using if needed, but styling might be different
 
 type AuditStep = 'LANDING' | 'CHECKING' | 'RESULT_ISSUE' | 'REPORT_SENT';
@@ -97,38 +99,7 @@ export default function PublicAuditPage() {
     return (
         <div className="font-sans antialiased bg-[#f8fafc] dark:bg-[#0f172a] text-[#0f172a] dark:text-slate-200 transition-colors duration-200 min-h-screen flex flex-col">
 
-            {/* HEADER */}
-            <header className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md px-6 md:px-20 py-4 sticky top-0 z-50">
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setStep('LANDING'); setWebsiteUrl(''); }}>
-                    <div className="size-9 flex items-center justify-center bg-primary rounded-xl text-white shadow-lg shadow-primary/20">
-                        <Bot size={22} />
-                    </div>
-                    <h2 className="text-[#0f172a] dark:text-white text-xl font-extrabold tracking-tight">Response Audit</h2>
-                </div>
-                <div className="flex flex-1 justify-end gap-10 items-center">
-                    <nav className="hidden md:flex items-center gap-8">
-                        <a className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="#how-it-works">How it Works</a>
-                        <a className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="#security">Security</a>
-                        <a className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="#solutions">Solutions</a>
-                    </nav>
-                    <div className="hidden md:flex items-center gap-4">
-                        <Link href="/login" className="text-slate-900 dark:text-white text-sm font-bold hover:text-primary transition-colors">Login</Link>
-                        <Link href="/login" className="bg-primary text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-all shadow-md">Get Started</Link>
-                    </div>
-                    {/* Mobile Menu Toggle */}
-                    <button className="md:hidden text-slate-900 dark:text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                        {mobileMenuOpen ? <X /> : <Menu />}
-                    </button>
-                </div>
-            </header>
-
-            {mobileMenuOpen && (
-                <div className="md:hidden bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 p-4 space-y-4">
-                    <a className="block text-slate-600 dark:text-slate-400 font-semibold" href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>How it Works</a>
-                    <Link href="/login" className="block text-slate-900 dark:text-white font-bold">Login</Link>
-                    <Link href="/login" className="block text-primary font-bold">Get Started</Link>
-                </div>
-            )}
+            <SiteHeader />
 
             <main className="flex-1 flex flex-col">
                 {/* 1. HERO SECTION (Input) */}
@@ -297,7 +268,7 @@ export default function PublicAuditPage() {
                                         </div>
                                         <div className="flex justify-between items-center py-3 border-b border-slate-100 dark:border-slate-800">
                                             <span className="text-slate-500 font-medium">Scan Status</span>
-                                            <span className={`font-mono font-bold ${auditData?.isOnline ? 'text-emerald-500' : 'text-red-500'}`}>
+                                            <span className={`font - mono font - bold ${auditData?.isOnline ? 'text-emerald-500' : 'text-red-500'} `}>
                                                 {auditData?.isOnline ? 'ONLINE' : 'UNREACHABLE'}
                                             </span>
                                         </div>
@@ -481,63 +452,7 @@ export default function PublicAuditPage() {
                 )}
             </main>
 
-            <footer className="w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-16 px-6">
-                <div className="max-w-[1280px] mx-auto">
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
-                        <div className="col-span-1 lg:col-span-1 space-y-6">
-                            <div className="flex items-center gap-2">
-                                <div className="size-8 flex items-center justify-center bg-primary rounded-lg text-white">
-                                    <Bot size={18} />
-                                </div>
-                                <h2 className="text-[#0f172a] dark:text-white text-xl font-extrabold tracking-tight">Response Audit</h2>
-                            </div>
-                            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-                                The world's first Agentic AI Operating System designed specifically for the operational needs of modern SMBs.
-                            </p>
-                            <div className="flex gap-4">
-                                <Link className="size-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-primary transition-colors" href="/contact">
-                                    <AtSign size={20} />
-                                </Link>
-                                <Link className="size-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-primary transition-colors" href="/contact">
-                                    <Share2 size={20} />
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:col-span-3 gap-8">
-                            <div className="space-y-6">
-                                <h4 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">Platform</h4>
-                                <ul className="space-y-4">
-                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/#how-it-works">How it Works</Link></li>
-                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/#security">Security Stack</Link></li>
-                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/pricing">Pricing</Link></li>
-                                </ul>
-                            </div>
-                            <div className="space-y-6">
-                                <h4 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">Resources</h4>
-                                <ul className="space-y-4">
-                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/#how-it-works">Audit Framework</Link></li>
-                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/about">About Us</Link></li>
-                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/contact">Contact</Link></li>
-                                </ul>
-                            </div>
-                            <div className="space-y-6">
-                                <h4 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">Legal</h4>
-                                <ul className="space-y-4">
-                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/privacy">Privacy Policy</Link></li>
-                                    <li><Link className="text-sm text-slate-500 hover:text-primary transition-colors font-medium" href="/terms">Terms of Service</Link></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <p className="text-sm text-slate-400 font-medium">© 2026 Response Audit Inc. All rights reserved.</p>
-                        <div className="flex items-center gap-6 text-slate-400">
-                            <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-tighter"><Globe size={14} /> Global Hub</span>
-                            <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-tighter"><BadgeCheck size={14} /> SOC2 Certified</span>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <SiteFooter />
 
             {/* Post-Audit Bridge Modal */}
             {step === 'REPORT_SENT' && (
