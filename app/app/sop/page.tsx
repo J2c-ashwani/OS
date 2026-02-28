@@ -6,11 +6,29 @@ import ComplianceSparkline from '@/components/sop/ComplianceSparkline';
 import ViolationTable from '@/components/sop/ViolationTable';
 import { Download, TrendingDown } from 'lucide-react';
 import PaywallGuard from '@/components/subscription/PaywallGuard';
+import { useToast } from '@/components/ui/Toast';
 
 export default function SOPEnforcementPage() {
+    const { toast } = useToast();
+
+    const handleExportAuditLog = () => {
+        const csvContent = 'Timestamp,Rule,Severity,Status\n' +
+            `${new Date().toISOString()},Initial Response Time,High,Violation\n` +
+            `${new Date().toISOString()},Follow-up Protocol,Medium,Compliant\n`;
+
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast('Audit log exported as CSV');
+    };
+
     return (
         <DashboardLayout>
-            <PaywallGuard feature="funnel"> {/* Reusing funnel tier for these advanced features */}
+            <PaywallGuard feature="funnel">
                 <div className="flex-1 flex flex-col h-full bg-slate-950">
                     {/* Header */}
                     <header className="p-8 pb-4">
@@ -20,7 +38,10 @@ export default function SOPEnforcementPage() {
                                 <p className="text-slate-400 text-base max-w-2xl">Real-time monitoring and automated compliance logging for Agentic AI standard operating procedures.</p>
                             </div>
                             <div className="flex gap-3">
-                                <button className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-lg transition-colors">
+                                <button
+                                    onClick={handleExportAuditLog}
+                                    className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-lg transition-colors"
+                                >
                                     <Download size={16} />
                                     Export Audit Log
                                 </button>

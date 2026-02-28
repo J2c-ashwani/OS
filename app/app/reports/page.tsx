@@ -1,4 +1,4 @@
-
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -8,13 +8,29 @@ import PerformancePillars from '@/components/reports/PerformancePillars';
 import DiagnosticSummaryTable from '@/components/reports/DiagnosticSummaryTable';
 import PaywallGuard from '@/components/subscription/PaywallGuard';
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import { useToast } from '@/components/ui/Toast';
 
 export default function ReportsPage() {
+    const { toast } = useToast();
+
+    const handleExportPDF = () => {
+        window.print();
+    };
+
+    const handleShareReport = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            toast('Report link copied to clipboard!');
+        } catch {
+            toast('Failed to copy link', 'error');
+        }
+    };
+
     return (
         <DashboardLayout>
-            <PaywallGuard feature="funnel"> {/* Using existing tier for now */}
+            <PaywallGuard feature="funnel">
                 <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-y-auto">
-                    {/* Top Navigation Bar Overlay (Simulated within layout context) */}
+                    {/* Top Navigation Bar */}
                     <div className="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 lg:px-20 py-3 print:hidden">
                         <div className="max-w-[1200px] mx-auto flex items-center justify-between">
                             <div className="flex items-center gap-4 text-slate-900 dark:text-white">
@@ -27,13 +43,16 @@ export default function ReportsPage() {
                                     <Link href="/app/settings" className="text-sm font-medium hover:text-primary transition-colors text-slate-500">Settings</Link>
                                 </nav>
                                 <div className="flex gap-2">
-                                    <button className="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary/90 transition-all">
+                                    <button
+                                        onClick={handleExportPDF}
+                                        className="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary/90 transition-all"
+                                    >
                                         <FileText size={18} className="mr-2" />
                                         <span>Export PDF</span>
                                     </button>
-                                    <button className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                                    <Link href="/app/alerts" className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
                                         <Bell size={18} />
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -46,19 +65,17 @@ export default function ReportsPage() {
                                 <h1 className="text-slate-900 dark:text-white text-4xl lg:text-5xl font-black tracking-tight leading-tight">Monthly Executive Summary</h1>
                                 <p className="text-slate-500 dark:text-slate-400 text-lg font-medium">Performance Period: {new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })} | Client: SMB Core Distribution</p>
                             </div>
-                            <button className="flex items-center gap-2 px-6 py-2.5 rounded-lg border-2 border-slate-300 dark:border-slate-700 font-bold text-sm hover:bg-white dark:hover:bg-slate-800 transition-all text-slate-700 dark:text-slate-200">
+                            <button
+                                onClick={handleShareReport}
+                                className="flex items-center gap-2 px-6 py-2.5 rounded-lg border-2 border-slate-300 dark:border-slate-700 font-bold text-sm hover:bg-white dark:hover:bg-slate-800 transition-all text-slate-700 dark:text-slate-200"
+                            >
                                 <Share size={18} />
                                 Share Report
                             </button>
                         </div>
 
-                        {/* Revenue Recovery Hero Section */}
                         <RevenueRecoveryHero />
-
-                        {/* Three Main Pillars Section */}
                         <PerformancePillars />
-
-                        {/* Detailed Audit List */}
                         <DiagnosticSummaryTable />
 
                         {/* Footer */}

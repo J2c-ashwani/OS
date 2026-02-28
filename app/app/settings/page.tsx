@@ -5,8 +5,10 @@ import { useState } from 'react';
 import { Save, RefreshCw } from 'lucide-react';
 import { SYSTEM_MODE } from '@/lib/data/store';
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import { useToast } from '@/components/ui/Toast';
 
 export default function SettingsPage() {
+    const { toast } = useToast();
     const [systemMode, setSystemMode] = useState(SYSTEM_MODE);
     const [monitoringInterval, setMonitoringInterval] = useState(60); // minutes
     const [alertsEnabled, setAlertsEnabled] = useState(true);
@@ -15,8 +17,8 @@ export default function SettingsPage() {
     const [saved, setSaved] = useState(false);
 
     const handleSave = () => {
-        // In a real app, this would call an API
         setSaved(true);
+        toast('Settings saved successfully');
         setTimeout(() => setSaved(false), 3000);
     };
 

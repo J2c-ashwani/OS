@@ -1,24 +1,53 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Bell, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
 import RevenueChart from '@/components/admin/RevenueChart';
 import UserTable from '@/components/admin/UserTable';
+import { useToast } from '@/components/ui/Toast';
+
+interface DashboardStats {
+    totalBusinesses: number;
+    totalSubscriptions: number;
+    totalDiagnostics: number;
+    totalGaps: number;
+}
 
 export default function AdminDashboardPage() {
+    const { toast } = useToast();
+    const [stats, setStats] = useState<DashboardStats | null>(null);
+
+    useEffect(() => {
+        fetch('/api/admin/stats')
+            .then(r => r.json())
+            .then(data => setStats(data))
+            .catch(() => setStats(null));
+    }, []);
+
+    const handleExportCSV = () => {
+        const csv = 'Metric,Value\n' +
+            `Active Subscribers,${stats?.totalSubscriptions || 0}\n` +
+            `Total Businesses,${stats?.totalBusinesses || 0}\n` +
+            `Diagnostics Run,${stats?.totalDiagnostics || 0}\n` +
+            `Gaps Detected,${stats?.totalGaps || 0}\n`;
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `admin-metrics-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast('Metrics exported as CSV');
+    };
+
     return (
         <div className="flex flex-col h-full">
-            {/* Top Navigation Bar */}
             <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur flex items-center justify-between px-8 sticky top-0 z-10">
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">Platform Admin Control Center</h2>
                 <div className="flex items-center gap-4">
                     <div className="relative w-64">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                        <input
-                            className="w-full pl-10 pr-4 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 text-sm focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Global search..."
-                            type="text"
-                        />
+                        <input className="w-full pl-10 pr-4 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 text-sm focus:ring-emerald-500 focus:border-emerald-500" placeholder="Global search..." type="text" />
                     </div>
                     <button className="size-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors relative">
                         <Bell className="text-slate-600 dark:text-slate-400" size={20} />
@@ -28,37 +57,13 @@ export default function AdminDashboardPage() {
             </header>
 
             <div className="p-8 space-y-8 pb-20">
-                {/* High-Level Metric Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <MetricCard
-                        label="Total Active Subscribers"
-                        value="12,450"
-                        trend="+12%"
-                        isPositive
-                    />
-                    <MetricCard
-                        label="Monthly Recurring Revenue"
-                        value="$425,800"
-                        trend="+5.2%"
-                        isPositive
-                    />
-                    <MetricCard
-                        label="Churn Rate"
-                        value="2.4%"
-                        trend="-0.8%"
-                        isPositive={true} // Lower churn is good, handled via color logic
-                        trendColor="rose" // Manual override for semantic color
-                    />
-                    <MetricCard
-                        label="Pending Renewals"
-                        value="158"
-                        trend="+8"
-                        trendColor="amber"
-                        icon={<AlertCircle size={14} />}
-                    />
+                    <MetricCard label="Total Businesses" value={stats ? stats.totalBusinesses.toLocaleString() : '—'} trend="Live" isPositive />
+                    <MetricCard label="Active Subscriptions" value={stats ? stats.totalSubscriptions.toLocaleString() : '—'} trend="Live" isPositive />
+                    <MetricCard label="Diagnostics Run" value={stats ? stats.totalDiagnostics.toLocaleString() : '—'} trend="Live" isPositive />
+                    <MetricCard label="Gaps Detected" value={stats ? stats.totalGaps.toLocaleString() : '—'} trend={stats?.totalGaps ? `${stats.totalGaps} active` : '—'} trendColor="amber" icon={<AlertCircle size={14} />} />
                 </div>
 
-                {/* Revenue Trends Chart Section */}
                 <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div>
@@ -66,14 +71,13 @@ export default function AdminDashboardPage() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">Platform earnings over the last 12 months</p>
                         </div>
                         <div className="flex gap-2">
-                            <button className="px-3 py-1 text-xs font-medium border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400">Last 12M</button>
-                            <button className="px-3 py-1 text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Export CSV</button>
+                            <button onClick={() => toast('Time range filter coming soon', 'info')} className="px-3 py-1 text-xs font-medium border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400">Last 12M</button>
+                            <button onClick={handleExportCSV} className="px-3 py-1 text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Export CSV</button>
                         </div>
                     </div>
                     <RevenueChart />
                 </div>
 
-                {/* Users Table */}
                 <UserTable />
             </div>
         </div>
