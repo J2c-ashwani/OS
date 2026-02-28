@@ -387,7 +387,7 @@ export default function PublicAuditPage() {
 
                 {/* Social Proof Strip - Always show except when step is Checking */}
                 {!showChecking && (
-                    <section className="w-full bg-white dark:bg-slate-900/50 border-y border-slate-100 dark:border-slate-800 py-10">
+                    <section id="solutions" className="w-full bg-white dark:bg-slate-900/50 border-y border-slate-100 dark:border-slate-800 py-10">
                         <div className="max-w-[1280px] mx-auto px-6">
                             <div className="flex flex-col md:flex-row items-center justify-between gap-10">
                                 <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Powering Smarter SMBs</p>
@@ -456,7 +456,7 @@ export default function PublicAuditPage() {
 
                 {/* Footer CTA - Show on Landing */}
                 {showLanding && (
-                    <section className="w-full px-6 py-12 mb-20">
+                    <section id="security" className="w-full px-6 py-12 mb-20">
                         <div className="max-w-[1280px] mx-auto bg-[#0f172a] rounded-[2.5rem] p-12 md:p-24 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/20 to-transparent pointer-events-none"></div>
                             <div className="absolute -bottom-24 -left-24 size-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
