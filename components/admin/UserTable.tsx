@@ -2,17 +2,19 @@
 
 import React from 'react';
 import { Edit, Receipt, MoreVertical } from 'lucide-react';
+import { useToast } from '@/components/ui/Toast';
 
 export default function UserTable() {
+    const { toast } = useToast();
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">Subscription Lifecycle</h3>
                 <div className="flex gap-2">
-                    <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-sm hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors text-slate-600 dark:text-slate-400">
+                    <button onClick={() => toast('Filter functional coming soon', 'info')} className="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-sm hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors text-slate-600 dark:text-slate-400">
                         Filter
                     </button>
-                    <button className="bg-emerald-600 text-white flex items-center gap-2 px-4 py-2 rounded-lg text-sm hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/20 font-bold">
+                    <button onClick={() => toast('Add user modal coming soon', 'info')} className="bg-emerald-600 text-white flex items-center gap-2 px-4 py-2 rounded-lg text-sm hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/20 font-bold">
                         Add New User
                     </button>
                 </div>

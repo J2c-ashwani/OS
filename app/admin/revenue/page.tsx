@@ -10,9 +10,9 @@ export default function RevenueForecastPage() {
 
     const handleExportReport = () => {
         const csv = 'Client,Renewal Date,Contract Value,Tier,Status\n' +
-            'Acme Corp,Oct 24 2023,$45000,Enterprise,Stable\n' +
-            'Global Logistics,Oct 28 2023,$12200,Pro,At Risk\n' +
-            'Sky Ventures,Nov 02 2023,$8500,SMB Basic,Likely\n';
+            'Acme Corp,Jan 24 2026,$45000,Enterprise,Stable\n' +
+            'Global Logistics,Jan 28 2026,$12200,Pro,At Risk\n' +
+            'Sky Ventures,Feb 02 2026,$8500,SMB Basic,Likely\n';
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -74,9 +74,9 @@ export default function RevenueForecastPage() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                        <TableRow initials="AC" name="Acme Corp" date="Oct 24, 2023" value="$45,000" tier="Enterprise" tierColor="indigo" status="Stable" statusColor="green" onAction={() => toast('Client details view coming soon', 'info')} />
-                                        <TableRow initials="GL" name="Global Logistics" date="Oct 28, 2023" value="$12,200" tier="Pro" tierColor="purple" status="At Risk" statusColor="orange" pulse onAction={() => toast('Client details view coming soon', 'info')} />
-                                        <TableRow initials="SV" name="Sky Ventures" date="Nov 02, 2023" value="$8,500" tier="SMB Basic" tierColor="slate" status="Likely" statusColor="green" onAction={() => toast('Client details view coming soon', 'info')} />
+                                        <TableRow initials="AC" name="Acme Corp" date="Jan 24, 2026" value="$45,000" tier="Enterprise" tierColor="indigo" status="Stable" statusColor="green" onAction={() => toast('Client details view coming soon', 'info')} />
+                                        <TableRow initials="GL" name="Global Logistics" date="Jan 28, 2026" value="$12,200" tier="Pro" tierColor="purple" status="At Risk" statusColor="orange" pulse onAction={() => toast('Client details view coming soon', 'info')} />
+                                        <TableRow initials="SV" name="Sky Ventures" date="Feb 02, 2026" value="$8,500" tier="SMB Basic" tierColor="slate" status="Likely" statusColor="green" onAction={() => toast('Client details view coming soon', 'info')} />
                                     </tbody>
                                 </table>
                             </div>

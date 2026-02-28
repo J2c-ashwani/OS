@@ -19,7 +19,7 @@ export default function ROITrackerPage() {
                             <span className="bg-primary/20 text-primary px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider">Analysis Active</span>
                         </div>
                         <p className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Funnel Trend Analysis</p>
-                        <p className="text-slate-500 dark:text-[#92a4c9] text-base font-normal leading-normal">Comparing current efficiency against baseline performance (Started Oct 2023).</p>
+                        <p className="text-slate-500 dark:text-[#92a4c9] text-base font-normal leading-normal">Comparing current efficiency against baseline performance (Started Jan 2026).</p>
                     </div>
                     <div className="flex gap-3">
                         <button

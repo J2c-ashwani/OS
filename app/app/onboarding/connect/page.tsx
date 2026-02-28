@@ -67,9 +67,9 @@ export default function ConnectivityPage() {
                     status="disconnected"
                 />
                 <DataSourceCard
-                    name="Stripe"
+                    name="PayPal"
                     type="Payments"
-                    icon={<span className="font-bold text-indigo-600">S</span>}
+                    icon={<span className="font-bold text-blue-600">P</span>}
                     status="disconnected"
                 />
                 <DataSourceCard

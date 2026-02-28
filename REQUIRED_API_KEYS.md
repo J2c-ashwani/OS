@@ -1,6 +1,6 @@
 # 🔑 Master API Key Requirements
 
-This document lists every external service required to run **AuditOS** in "Production Mode" with 100% accuracy and autonomy.
+This document lists every external service required to run the **Response Audit System** in "Production Mode" with 100% accuracy and autonomy.
 
 ## 📋 Quick Checklist
 
@@ -53,7 +53,7 @@ SMTP_HOST="smtp.sendgrid.net"
 SMTP_PORT="587"
 SMTP_USER="apikey"
 SMTP_PASS="SG..."
-SMTP_FROM_EMAIL="agent@auditos.com"
+SMTP_FROM_EMAIL="agent@responseaudit.com"
 
 # ------------------------------------------------------------------
 # 5. PAYMENTS (Global MoR) - LemonSqueezy

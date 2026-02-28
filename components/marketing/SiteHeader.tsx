@@ -18,13 +18,15 @@ export function SiteHeader() {
                 </Link>
                 <div className="flex flex-1 justify-end gap-10 items-center">
                     <nav className="hidden md:flex items-center gap-8">
-                        <Link className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="/#how-it-works">How it Works</Link>
+                        <Link className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="/#how-it-works">Features</Link>
+                        <Link className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="/pricing">Pricing</Link>
+                        <Link className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="/about">About</Link>
                         <Link className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="/#security">Security</Link>
                         <Link className="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors" href="/#solutions">Solutions</Link>
                     </nav>
                     <div className="hidden md:flex items-center gap-4">
                         <Link href="/login" className="text-slate-900 dark:text-white text-sm font-bold hover:text-primary transition-colors">Login</Link>
-                        <Link href="/login" className="bg-primary text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-all shadow-md">Get Started</Link>
+                        <Link href="/pricing" className="bg-primary text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-all shadow-md">Start Monitoring</Link>
                     </div>
                     {/* Mobile Menu Toggle */}
                     <button className="md:hidden text-slate-900 dark:text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -35,12 +37,14 @@ export function SiteHeader() {
 
             {mobileMenuOpen && (
                 <div className="md:hidden bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 p-4 space-y-4 shadow-xl absolute w-full z-40">
-                    <Link className="block text-slate-600 dark:text-slate-400 font-semibold" href="/#how-it-works" onClick={() => setMobileMenuOpen(false)}>How it Works</Link>
+                    <Link className="block text-slate-600 dark:text-slate-400 font-semibold" href="/#how-it-works" onClick={() => setMobileMenuOpen(false)}>Features</Link>
+                    <Link className="block text-slate-600 dark:text-slate-400 font-semibold" href="/pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
+                    <Link className="block text-slate-600 dark:text-slate-400 font-semibold" href="/about" onClick={() => setMobileMenuOpen(false)}>About</Link>
                     <Link className="block text-slate-600 dark:text-slate-400 font-semibold" href="/#security" onClick={() => setMobileMenuOpen(false)}>Security</Link>
                     <Link className="block text-slate-600 dark:text-slate-400 font-semibold" href="/#solutions" onClick={() => setMobileMenuOpen(false)}>Solutions</Link>
                     <div className="border-t border-slate-200 dark:border-slate-800 my-2 pt-2"></div>
                     <Link href="/login" className="block text-slate-900 dark:text-white font-bold" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-                    <Link href="/login" className="block text-primary font-bold" onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
+                    <Link href="/pricing" className="block text-primary font-bold" onClick={() => setMobileMenuOpen(false)}>Start Monitoring</Link>
                 </div>
             )}
         </>

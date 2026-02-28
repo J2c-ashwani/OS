@@ -20,7 +20,7 @@ export default function DashboardLayout({
             <header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-slate-800 z-40 flex items-center justify-between px-4">
                 <div className="flex items-center gap-2 font-bold text-emerald-400">
                     <ShieldAlert className="w-6 h-6" />
-                    <span>BizOS</span>
+                    <span>Response Audit</span>
                 </div>
                 <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -49,7 +49,9 @@ export default function DashboardLayout({
                 <div className="p-6 border-b border-slate-800 hidden md:block">
                     <h1 className="text-xl font-bold tracking-tight text-emerald-400 flex items-center gap-2">
                         <ShieldAlert className="w-6 h-6" />
-                        BizOS Agent
+                        <span className="truncate">
+                            Response Audit Agent
+                        </span>
                     </h1>
                     <p className="text-xs text-slate-500 mt-1">Autonomous Auditor v0.1</p>
                 </div>
@@ -79,9 +81,14 @@ export default function DashboardLayout({
                             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                             Running (Daemon)
                         </div>
+                        <div className="mt-2">
+                            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+                                Response Audit
+                            </span>
+                        </div>
                     </div>
                     <button
-                        onClick={() => signOut({ callbackUrl: '/' })}
+                        onClick={() => signOut({ callbackUrl: window.location.origin })}
                         className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-red-400 hover:bg-red-500/10 hover:text-red-300"
                     >
                         <LogOut size={18} />

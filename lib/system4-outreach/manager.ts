@@ -67,7 +67,7 @@ BizOS Agent
         // EMAIL 2: BUMP / VALUE AD (Day 2)
         if (step === 1) {
             return {
-                subject: `Did you see the risk report for ${business.name}?`,
+                subject: `[Response Audit] Customer Inquiry Analysis for ${business.name}`,
                 body: `
 Hi ${firstName},
 

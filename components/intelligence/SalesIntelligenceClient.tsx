@@ -75,7 +75,7 @@ export default function SalesIntelligenceClient() {
                                     <path clipRule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor" fillRule="evenodd"></path>
                                 </svg>
                             </div>
-                            <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Agentic AI OS</h2>
+                            <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Response Audit</h2>
                         </div>
                         <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white pl-8 border-l border-slate-200 dark:border-slate-800">
                             Daily Lead Recovery Hub

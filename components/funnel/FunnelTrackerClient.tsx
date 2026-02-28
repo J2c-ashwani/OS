@@ -19,7 +19,7 @@ export default function FunnelTrackerClient() {
                                 <path clipRule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor" fillRule="evenodd"></path>
                             </svg>
                         </div>
-                        <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Agentic AI OS</h2>
+                        <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Response Audit</h2>
                     </div>
                     <label className="flex flex-col min-w-40 !h-10 max-w-64">
                         <div className="flex w-full flex-1 items-stretch rounded-lg h-full">
@@ -82,7 +82,7 @@ export default function FunnelTrackerClient() {
 
             {/* Global Footer */}
             <footer className="mt-20 border-t border-slate-200 dark:border-[#1e293b] py-8 text-center bg-white dark:bg-[#0b0d11]">
-                <p className="text-slate-500 text-xs uppercase tracking-widest font-bold">Agentic AI OS • Enterprise v2.4.0 • Built for SMB Scalability</p>
+                <p className="text-slate-500 text-xs uppercase tracking-widest font-bold">Response Audit • Enterprise v2.4.0 • Built for SMB Scalability</p>
             </footer>
         </div>
     );

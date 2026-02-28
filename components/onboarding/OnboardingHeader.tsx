@@ -11,7 +11,7 @@ export default function OnboardingHeader() {
                 <div className="size-6">
                     <ShieldAlert size={24} />
                 </div>
-                <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Agentic AI OS</h2>
+                <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Response Audit</h2>
             </div>
             <div className="flex flex-1 justify-end gap-8">
                 <div className="hidden md:flex items-center gap-9">

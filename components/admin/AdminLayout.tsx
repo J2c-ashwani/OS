@@ -27,14 +27,12 @@ export default function AdminLayout({
                     <div className="size-8 bg-emerald-600 rounded-lg flex items-center justify-center">
                         <Terminal className="text-white" size={20} />
                     </div>
-                    <h1 className="font-bold text-lg tracking-tight">Agentic AI OS</h1>
+                    <h1 className="font-bold text-lg tracking-tight">Response Audit</h1>
                 </div>
 
                 <nav className="flex-1 px-4 py-4 space-y-1">
                     <NavItem href="/admin/dashboard" icon={<LayoutDashboard />} label="Overview" />
-                    <NavItem href="/admin/revenue" icon={<CreditCard />} label="Subscriptions" />
                     <NavItem href="/admin/revenue" icon={<BarChart3 />} label="Revenue" />
-                    <NavItem href="/admin/dashboard" icon={<Users />} label="User Management" />
                     <NavItem href="/admin/console" icon={<Terminal />} label="System Console" />
                 </nav>
 

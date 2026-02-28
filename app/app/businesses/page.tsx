@@ -7,11 +7,13 @@ import { getDashboardStatsAction } from '../../actions';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { EmptyBusinesses } from '@/components/ui/EmptyState';
 import AddBusinessWizard from '@/components/onboarding/AddBusinessWizard';
+import { useToast } from '@/components/ui/Toast';
 
 export default function BusinessesPage() {
     const [showWizard, setShowWizard] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState<'ALL' | 'TARGET' | 'MONITORED' | 'POC' | 'CUSTOMER'>('ALL');
+    const { toast } = useToast();
 
     // Real Data State
     const [businesses, setBusinesses] = useState<any[]>([]);
@@ -102,10 +104,10 @@ export default function BusinessesPage() {
                                     try {
                                         const res = await fetch('/api/cron/source-leads');
                                         const data = await res.json();
-                                        alert(data.message);
+                                        toast(data.message);
                                         fetchData(); // Refresh list
                                     } catch (e) {
-                                        alert('Failed to run autonomous sourcing');
+                                        toast('Failed to run autonomous sourcing', 'error');
                                     }
 
                                     if (btn) btn.innerText = 'Auto-Source Leads';

@@ -110,7 +110,7 @@ export async function generateRiskReport(
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.text('AuditOS', margin + 14, 20);
+    doc.text('Response Audit', margin + 14, 20);
 
     // Report title
     doc.setFontSize(10);
@@ -299,9 +299,9 @@ export async function generateRiskReport(
 
     doc.setTextColor(156, 163, 175);
     doc.setFontSize(7);
-    doc.text(`This report was generated autonomously by AuditOS Response Reliability Monitor.`, margin, footerY);
+    doc.text(`This report was generated autonomously by the Response Audit System.`, margin, footerY);
     doc.text(`Report ID: ${reportId} | Timestamp: ${reportDate.toISOString()}`, margin, footerY + 5);
-    doc.text('© 2026 AuditOS. All rights reserved.', pageWidth - margin, footerY + 5, { align: 'right' });
+    doc.text('© 2026 Response Audit System. All rights reserved.', pageWidth - margin, footerY + 5, { align: 'right' });
 
     // Digital signature placeholder
     doc.setFontSize(6);
@@ -312,7 +312,7 @@ export async function generateRiskReport(
     const buffer = Buffer.from(pdfOutput);
 
     // Generate filename
-    const filename = `AuditOS_RiskReport_${sanitizeForFilename(business.name)}_${formatDateForFilename(reportDate)}.pdf`;
+    const filename = `ResponseAudit_RiskReport_${sanitizeForFilename(business.name)}_${formatDateForFilename(reportDate)}.pdf`;
 
     return {
         buffer,

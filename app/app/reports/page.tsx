@@ -34,7 +34,7 @@ export default function ReportsPage() {
                     <div className="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 lg:px-20 py-3 print:hidden">
                         <div className="max-w-[1200px] mx-auto flex items-center justify-between">
                             <div className="flex items-center gap-4 text-slate-900 dark:text-white">
-                                <h2 className="text-lg font-bold leading-tight tracking-tight">Agentic AI OS</h2>
+                                <h2 className="text-lg font-bold leading-tight tracking-tight">Response Audit</h2>
                             </div>
                             <div className="flex flex-1 justify-end gap-6 items-center">
                                 <nav className="hidden md:flex items-center gap-8">

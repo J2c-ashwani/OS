@@ -69,7 +69,7 @@ export default function PublicAuditPage() {
                     setProgress(100);
 
                     if (res?.success && res?.data) {
-                        setAuditData(res.data);
+                        setAuditData(res.data as AuditResult);
                         setTimeout(() => {
                             setStep('RESULT_ISSUE');
                         }, 500);
@@ -79,7 +79,7 @@ export default function PublicAuditPage() {
                 } catch (err) {
                     clearInterval(interval);
                     console.error("Audit Error:", err);
-                    alert('Could not reach website. Please check the URL.');
+                    setSubmitMessage('Could not reach website. Please check the URL and try again.');
                     setStep('LANDING');
                     setProgress(0);
                 }
@@ -303,12 +303,14 @@ export default function PublicAuditPage() {
                                                     e.preventDefault();
                                                     const formData = new FormData(e.currentTarget);
                                                     const emailValue = formData.get('email') as string;
+                                                    const honeypotValue = formData.get('secondary_email') as string;
                                                     setCapturedEmail(emailValue);
                                                     setCapturedUrl(websiteUrl);
 
                                                     const result = await submitAuditLeadAction({
                                                         email: emailValue,
-                                                        websiteUrl
+                                                        websiteUrl,
+                                                        honeypot: honeypotValue
                                                     });
 
                                                     if (result.success) {
@@ -326,6 +328,14 @@ export default function PublicAuditPage() {
                                                     required
                                                     placeholder="Enter your work email"
                                                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:text-white"
+                                                />
+                                                {/* Anti-bot Honeypot Field */}
+                                                <input
+                                                    type="text"
+                                                    name="secondary_email"
+                                                    className="opacity-0 absolute -z-10 h-0 w-0"
+                                                    tabIndex={-1}
+                                                    autoComplete="off"
                                                 />
                                                 <button
                                                     type="submit"
