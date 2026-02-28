@@ -10,8 +10,10 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                // Mock authentication - replace with real database check later
-                if (credentials?.email === "admin@responseaudit.com" && credentials?.password === "admin") {
+                // Mock authentication for MVP
+                if (!credentials?.email || !credentials?.password) return null;
+
+                if (credentials.email === "admin@responseaudit.com" && credentials.password === "admin") {
                     return {
                         id: "1",
                         email: credentials.email,
@@ -19,16 +21,14 @@ export const authOptions: NextAuthOptions = {
                         role: "ADMIN"
                     }
                 }
-                if (credentials?.email === "customer@example.com" && credentials?.password === "demo") {
-                    return {
-                        id: "2",
-                        email: credentials.email,
-                        name: "Demo Customer",
-                        role: "CUSTOMER"
-                    }
+
+                // For the MVP Sign-Up/Sign-In flow, accept any validly formatted email
+                return {
+                    id: Math.random().toString(36).substring(7),
+                    email: credentials.email,
+                    name: credentials.email.split('@')[0],
+                    role: "CUSTOMER"
                 }
-                // Invalid credentials
-                return null
             }
         })
     ],

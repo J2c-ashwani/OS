@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { ShieldCheck, Mail, Lock, ArrowRight } from 'lucide-react'
 
 export default function LoginPage() {
+    const [isLogin, setIsLogin] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
@@ -39,12 +40,16 @@ export default function LoginPage() {
             <div className="max-w-md w-full">
                 {/* Logo/Branding */}
                 <div className="text-center mb-8">
-                    <Link href="/" className="inline-flex items-center gap-2 text-emerald-500 hover:text-emerald-400 transition-colors mb-4">
+                    <Link href="/" className="inline-flex items-center gap-2 text-primary hover:text-blue-500 transition-colors mb-4">
                         <ShieldCheck size={32} />
                         <span className="text-2xl font-bold">Response Audit</span>
                     </Link>
-                    <h1 className="text-3xl font-bold text-white mt-6 mb-2">Welcome Back</h1>
-                    <p className="text-gray-400">Sign in to access your dashboard</p>
+                    <h1 className="text-3xl font-bold text-white mt-6 mb-2">
+                        {isLogin ? 'Welcome Back' : 'Create an Account'}
+                    </h1>
+                    <p className="text-gray-400">
+                        {isLogin ? 'Sign in to access your dashboard' : 'Start your 14-day free trial today'}
+                    </p>
                 </div>
 
                 {/* Login Form */}
@@ -64,8 +69,8 @@ export default function LoginPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="you@example.com"
                                     required
-                                    className="w-full bg-[#0A0A0A] border border-gray-800 rounded-lg pl-10 py-3 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none transition-colors"
-                                    style={{ paddingLeft: '2.5rem', color: '#ffffff' }} // Explicit inline override
+                                    className="w-full bg-[#0A0A0A] border border-gray-800 rounded-lg pl-10 py-3 text-white placeholder:text-gray-600 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                                    style={{ paddingLeft: '2.5rem', color: '#ffffff' }}
                                 />
                             </div>
                         </div>
@@ -84,8 +89,8 @@ export default function LoginPage() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
-                                    className="w-full bg-[#0A0A0A] border border-gray-800 rounded-lg pl-10 py-3 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none transition-colors"
-                                    style={{ paddingLeft: '2.5rem', color: '#ffffff' }} // Explicit inline override
+                                    className="w-full bg-[#0A0A0A] border border-gray-800 rounded-lg pl-10 py-3 text-white placeholder:text-gray-600 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                                    style={{ paddingLeft: '2.5rem', color: '#ffffff' }}
                                 />
                             </div>
                         </div>
@@ -101,19 +106,27 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-primary hover:bg-blue-600 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20"
                         >
-                            {isLoading ? 'Signing in...' : 'Sign In'}
+                            {isLoading ? (isLogin ? 'Signing in...' : 'Creating account...') : (isLogin ? 'Sign In' : 'Create Account')}
                             {!isLoading && <ArrowRight size={18} />}
                         </button>
                     </form>
 
-
+                    <div className="mt-6 text-center text-sm text-gray-400">
+                        {isLogin ? "Don't have an account? " : "Already have an account? "}
+                        <button
+                            onClick={() => setIsLogin(!isLogin)}
+                            className="text-primary hover:text-blue-400 font-bold transition-colors"
+                        >
+                            {isLogin ? 'Sign Up' : 'Sign In'}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Back to Homepage */}
-                <div className="mt-6 text-center">
-                    <Link href="/" className="text-sm text-gray-500 hover:text-gray-400 transition-colors">
+                <div className="mt-8 text-center">
+                    <Link href="/" className="text-sm font-medium text-gray-500 hover:text-primary transition-colors">
                         ← Back to Homepage
                     </Link>
                 </div>
