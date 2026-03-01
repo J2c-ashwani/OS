@@ -17,6 +17,8 @@ model User {
   name               String?
   role               String    @default("CUSTOMER") // CUSTOMER, ADMIN
   onboardingComplete Boolean   @default(false)
+  resetToken         String?
+  resetTokenExpiry   DateTime?
   businesses         Business[]
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt

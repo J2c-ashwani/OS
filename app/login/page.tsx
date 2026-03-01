@@ -162,6 +162,16 @@ export default function LoginPage() {
                             {!isLogin && (
                                 <p className="text-gray-600 text-xs mt-1">Minimum 6 characters</p>
                             )}
+                            {isLogin && (
+                                <div className="mt-2 text-right">
+                                    <Link
+                                        href="/forgot-password"
+                                        className="text-xs text-gray-500 hover:text-primary transition-colors"
+                                    >
+                                        Forgot password?
+                                    </Link>
+                                </div>
+                            )}
                         </div>
 
                         {/* Error Message */}
