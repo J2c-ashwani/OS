@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ShieldCheck, Users, Activity, Database, Settings as SettingsIcon, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Users, Activity, Database, Settings as SettingsIcon, AlertCircle, UserCog } from 'lucide-react';
 import { getAdminStatsAction, getRecentActivityAction } from '@/app/actions/admin';
 
 export default async function AdminConsolePage() {
@@ -66,7 +66,7 @@ export default async function AdminConsolePage() {
                 )}
 
                 {/* Quick Actions */}
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Link
                         href="/admin/system"
                         className="bg-[#111]/50 border border-gray-900 rounded-lg p-8 hover:border-emerald-500/50 transition-colors"
@@ -76,8 +76,17 @@ export default async function AdminConsolePage() {
                         <p className="text-sm text-gray-400">Manage system mode, data, and debug tools</p>
                     </Link>
 
+                    <Link
+                        href="/admin/users"
+                        className="bg-[#111]/50 border border-gray-900 rounded-lg p-8 hover:border-blue-500/50 transition-colors"
+                    >
+                        <UserCog size={24} className="text-blue-500 mb-3" />
+                        <h3 className="text-xl font-semibold text-white mb-2">User Management</h3>
+                        <p className="text-sm text-gray-400">Manage users, assign admin roles, view accounts</p>
+                    </Link>
+
                     <div className="bg-[#111]/50 border border-gray-900 rounded-lg p-8">
-                        <Database size={24} className="text-blue-500 mb-3" />
+                        <Database size={24} className="text-yellow-500 mb-3" />
                         <h3 className="text-xl font-semibold text-white mb-2">Database Status</h3>
                         <p className="text-sm text-gray-400">
                             {stats ? `${stats.totalBusinesses} businesses • ${stats.scansToday} scans today` : 'Loading...'}

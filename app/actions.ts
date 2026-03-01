@@ -267,6 +267,28 @@ export async function completeOnboardingAction(data: {
 }) {
     console.log(`[ONBOARDING] Completing onboarding for business: ${data.businessName}`);
     try {
+        // Input sanitization
+        const { sanitizeBusinessName, sanitizeUrl, sanitizeEmail, sanitizeString } = await import('@/lib/sanitize');
+
+        const cleanName = sanitizeBusinessName(data.businessName);
+        if (!cleanName) {
+            return { success: false, message: 'Please enter a valid business name (2-100 characters).' };
+        }
+
+        const cleanUrl = sanitizeUrl(data.websiteUrl);
+        if (!cleanUrl) {
+            return { success: false, message: 'Please enter a valid website URL.' };
+        }
+
+        const cleanIndustry = sanitizeString(data.industry || '');
+        const cleanChannel = sanitizeString(data.channel || 'EMAIL');
+        const cleanDetails = sanitizeString(data.channelDetails || '');
+
+        // Validate channel-specific details
+        if (cleanChannel === 'EMAIL' && cleanDetails && !sanitizeEmail(cleanDetails)) {
+            return { success: false, message: 'Please enter a valid email address for your contact channel.' };
+        }
+
         // Get the current user session
         const { getServerSession } = await import('next-auth');
         const { authOptions } = await import('@/lib/auth');
@@ -278,19 +300,16 @@ export async function completeOnboardingAction(data: {
 
         const userId = session.user.id;
 
-        // Normalize URL
-        const normalizedUrl = data.websiteUrl.includes('://') ? data.websiteUrl : `https://${data.websiteUrl}`;
-
         // Create the business linked to this user
         const business = await db.business.create({
             data: {
-                name: data.businessName,
-                websiteUrl: normalizedUrl,
-                industry: data.industry || null,
-                primaryChannel: data.channel || 'EMAIL',
-                contactEmail: data.channel === 'EMAIL' ? data.channelDetails : undefined,
-                contactPhone: data.channel === 'PHONE' ? data.channelDetails : undefined,
-                address: data.channel === 'MAPS' ? data.channelDetails : undefined,
+                name: cleanName,
+                websiteUrl: cleanUrl,
+                industry: cleanIndustry || null,
+                primaryChannel: cleanChannel || 'EMAIL',
+                contactEmail: cleanChannel === 'EMAIL' ? cleanDetails : undefined,
+                contactPhone: cleanChannel === 'PHONE' ? cleanDetails : undefined,
+                address: cleanChannel === 'MAPS' ? cleanDetails : undefined,
                 status: 'MONITORED',
                 userId: userId,
             }
