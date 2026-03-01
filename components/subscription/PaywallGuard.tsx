@@ -95,7 +95,7 @@ export default function PaywallGuard({ children, feature }: PaywallGuardProps) {
                     <UpgradeButton />
 
                     <p className="mt-6 text-xs text-gray-500">
-                        14-day money-back guarantee • Cancel anytime
+                        Cancel anytime • No charges after cancellation
                     </p>
                 </div>
             </div>

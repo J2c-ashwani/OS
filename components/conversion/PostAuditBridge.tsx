@@ -97,7 +97,7 @@ export default function PostAuditBridge({ email, businessUrl, onClose }: PostAud
                                     href="/pricing"
                                     className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-primary/20"
                                 >
-                                    Start 14-Day Free Trial
+                                    Start Monitoring Now
                                     <ArrowRight size={18} />
                                 </Link>
                             </div>
