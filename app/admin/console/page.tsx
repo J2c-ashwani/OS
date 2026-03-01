@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { ShieldCheck, Users, Activity, Database, Settings as SettingsIcon, AlertCircle, UserCog } from 'lucide-react';
 import { getAdminStatsAction, getRecentActivityAction } from '@/app/actions/admin';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminConsolePage() {
     // Fetch real data
     const statsResult = await getAdminStatsAction();
