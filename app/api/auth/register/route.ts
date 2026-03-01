@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 
 export async function POST(req: Request) {
     try {
-        const { email, password } = await req.json();
+        const { name, email, password } = await req.json();
 
         if (!email || !password) {
             return NextResponse.json(
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
             data: {
                 email,
                 password: hashedPassword,
-                name: email.split('@')[0], // Give them a default name
+                name: name || email.split('@')[0], // Use provided name, fallback to email prefix
             },
         });
 

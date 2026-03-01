@@ -256,3 +256,59 @@ export async function createBusinessAction(data: any) {
         return { success: false, message: 'Failed to create business' };
     }
 }
+
+export async function completeOnboardingAction(data: {
+    businessName: string;
+    websiteUrl: string;
+    industry: string;
+    channel: string;
+    channelDetails: string;
+    checkInterval: string;
+}) {
+    console.log(`[ONBOARDING] Completing onboarding for business: ${data.businessName}`);
+    try {
+        // Get the current user session
+        const { getServerSession } = await import('next-auth');
+        const { authOptions } = await import('@/lib/auth');
+        const session = await getServerSession(authOptions);
+
+        if (!session?.user?.id) {
+            return { success: false, message: 'Not authenticated. Please log in again.' };
+        }
+
+        const userId = session.user.id;
+
+        // Normalize URL
+        const normalizedUrl = data.websiteUrl.includes('://') ? data.websiteUrl : `https://${data.websiteUrl}`;
+
+        // Create the business linked to this user
+        const business = await db.business.create({
+            data: {
+                name: data.businessName,
+                websiteUrl: normalizedUrl,
+                industry: data.industry || null,
+                primaryChannel: data.channel || 'EMAIL',
+                contactEmail: data.channel === 'EMAIL' ? data.channelDetails : undefined,
+                contactPhone: data.channel === 'PHONE' ? data.channelDetails : undefined,
+                address: data.channel === 'MAPS' ? data.channelDetails : undefined,
+                status: 'MONITORED',
+                userId: userId,
+            }
+        });
+
+        // Mark onboarding as complete
+        await db.user.update({
+            where: { id: userId },
+            data: { onboardingComplete: true },
+        });
+
+        console.log(`[ONBOARDING] Business ${business.id} created and linked to user ${userId}. Onboarding complete.`);
+
+        revalidatePath('/');
+        return { success: true, business };
+    } catch (e) {
+        console.error('[ONBOARDING ERROR]', e);
+        return { success: false, message: 'Failed to complete setup. Please try again.' };
+    }
+}
+

@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Users, Activity, Settings, Bell, ShieldAlert, LogOut, LineChart, Filter, FileText, Menu, X } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -12,7 +12,44 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
     const pathname = usePathname();
+    const router = useRouter();
+
+    // Onboarding gate: redirect to setup if not complete
+    useEffect(() => {
+        // Don't check if already on the onboarding page
+        if (pathname.startsWith('/app/onboarding')) {
+            setIsCheckingOnboarding(false);
+            return;
+        }
+
+        fetch('/api/auth/onboarding-status')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.onboardingComplete) {
+                    router.replace('/app/onboarding/setup');
+                } else {
+                    setIsCheckingOnboarding(false);
+                }
+            })
+            .catch(() => {
+                // If check fails, let them through (graceful degradation)
+                setIsCheckingOnboarding(false);
+            });
+    }, [pathname, router]);
+
+    // Show nothing while checking onboarding status to avoid flash
+    if (isCheckingOnboarding) {
+        return (
+            <div className="flex h-screen bg-slate-950 items-center justify-center">
+                <div className="text-center">
+                    <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-slate-400 text-sm">Loading...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex h-screen bg-slate-950 text-slate-100 font-sans antialiased overflow-hidden">
