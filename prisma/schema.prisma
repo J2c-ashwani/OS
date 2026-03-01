@@ -17,11 +17,28 @@ model User {
   name               String?
   role               String    @default("CUSTOMER") // CUSTOMER, ADMIN
   onboardingComplete Boolean   @default(false)
+  emailVerified      Boolean   @default(false)
+  verifyToken        String?
+  verifyTokenExpiry  DateTime?
   resetToken         String?
   resetTokenExpiry   DateTime?
   businesses         Business[]
+  subscriptions      Subscription[]
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+}
+
+model Subscription {
+  id               String    @id @default(cuid())
+  paypalSubId      String?   @unique  // PayPal subscription ID
+  plan             String    @default("STARTER") // STARTER, PRO, etc.
+  status           String    @default("ACTIVE") // ACTIVE, CANCELLED, EXPIRED, PAUSED
+  currentPeriodEnd DateTime?
+  cancelledAt      DateTime?
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model Business {

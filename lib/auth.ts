@@ -28,6 +28,11 @@ export const authOptions: NextAuthOptions = {
                     return null;
                 }
 
+                // Check email verification
+                if (!user.emailVerified) {
+                    throw new Error('Please verify your email address before logging in. Check your inbox for the verification link.');
+                }
+
                 return {
                     id: user.id,
                     email: user.email,

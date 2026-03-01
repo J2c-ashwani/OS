@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { db } from '@/lib/db';
 import { checkRateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
 import { sanitizeEmail, sanitizeUserName, validatePassword } from '@/lib/sanitize';
@@ -59,18 +60,37 @@ export async function POST(req: Request) {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create the user
+        // Generate email verification token (valid 24 hours)
+        const verifyToken = crypto.randomBytes(32).toString('hex');
+        const verifyTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+        // Create the user with verification token
         const newUser = await db.user.create({
             data: {
                 email: cleanEmail,
                 password: hashedPassword,
                 name: cleanName || cleanEmail.split('@')[0],
+                emailVerified: false,
+                verifyToken,
+                verifyTokenExpiry,
             },
         });
 
+        // In production, send verification email via Resend/SendGrid:
+        // const verifyUrl = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verifyToken}`;
+        // await sendEmail({ to: cleanEmail, subject: 'Verify Your Email', html: `<a href="${verifyUrl}">Verify Email</a>` });
+
+        // For development, log the verification link
+        console.log(`\n📧 [EMAIL VERIFICATION] Token for ${cleanEmail}: ${verifyToken}`);
+        console.log(`   Verify link: http://localhost:3000/api/auth/verify-email?token=${verifyToken}\n`);
+
         const headers = getRateLimitHeaders(ip, 'register');
         return NextResponse.json(
-            { message: 'Account created successfully', userId: newUser.id },
+            {
+                message: 'Account created! Please check your email to verify your account before logging in.',
+                userId: newUser.id,
+                requiresVerification: true,
+            },
             { status: 201, headers }
         );
     } catch (error) {

@@ -229,19 +229,43 @@ export async function getDashboardStatsAction() {
 }
 
 export async function checkSubscriptionStatusAction(businessId?: string): Promise<{ isActive: boolean; plan: string }> {
-    // In a real app, we'd get the businessId from the session
-    // For this demo, we'll check against our mock store or default to free
+    try {
+        // Get the current user session
+        const { getServerSession } = await import('next-auth');
+        const { authOptions } = await import('@/lib/auth');
+        const session = await getServerSession(authOptions);
 
-    // Default ID for the demo "logged in" user if none provided
-    const targetId = businessId || 'b1';
+        if (!session?.user?.id) {
+            return { isActive: false, plan: 'FREE' };
+        }
 
-    const subscription = MOCK_SUBSCRIPTIONS.find(s => s.businessId === targetId && s.status === 'ACTIVE');
+        // Check for an active subscription in the database
+        const subscription = await db.subscription.findFirst({
+            where: {
+                userId: session.user.id,
+                status: 'ACTIVE',
+            },
+            orderBy: { createdAt: 'desc' },
+        });
 
-    if (subscription) {
-        return { isActive: true, plan: subscription.plan };
+        if (subscription) {
+            // If there's a currentPeriodEnd, check it hasn't passed
+            if (subscription.currentPeriodEnd && subscription.currentPeriodEnd < new Date()) {
+                // Subscription period has ended — mark as expired
+                await db.subscription.update({
+                    where: { id: subscription.id },
+                    data: { status: 'EXPIRED' },
+                });
+                return { isActive: false, plan: 'FREE' };
+            }
+            return { isActive: true, plan: subscription.plan };
+        }
+
+        return { isActive: false, plan: 'FREE' };
+    } catch (error) {
+        console.error('[SUBSCRIPTION CHECK ERROR]', error);
+        return { isActive: false, plan: 'FREE' };
     }
-
-    return { isActive: false, plan: 'FREE' };
 }
 
 export async function createBusinessAction(data: any) {
