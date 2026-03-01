@@ -1,20 +1,39 @@
-import React from 'react';
-import { getSubscriptionStatus } from '@/lib/services/subscriptionService';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { checkSubscriptionStatusAction } from '@/app/actions';
 import UpgradeButton from './UpgradeButton';
-import { Lock, CreditCard, CheckCircle } from 'lucide-react';
+import { Lock, CheckCircle, Loader2 } from 'lucide-react';
 
 interface PaywallGuardProps {
     children: React.ReactNode;
     feature: 'intelligence' | 'funnel' | 'monitoring' | 'report';
 }
 
-export default async function PaywallGuard({ children, feature }: PaywallGuardProps) {
-    const { isActive } = await getSubscriptionStatus();
+export default function PaywallGuard({ children, feature }: PaywallGuardProps) {
+    const [isActive, setIsActive] = useState<boolean | null>(null);
 
+    useEffect(() => {
+        checkSubscriptionStatusAction()
+            .then(({ isActive }) => setIsActive(isActive))
+            .catch(() => setIsActive(false));
+    }, []);
+
+    // Loading state
+    if (isActive === null) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <Loader2 className="animate-spin text-blue-500" size={32} />
+            </div>
+        );
+    }
+
+    // Subscribed — show content
     if (isActive) {
         return <>{children}</>;
     }
 
+    // Not subscribed — show paywall
     const featureDetails = {
         intelligence: {
             title: "Advanced Sales Intelligence",
