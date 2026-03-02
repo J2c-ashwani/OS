@@ -28,7 +28,7 @@ export default function ReportsPage() {
 
     return (
         <DashboardLayout>
-            <PaywallGuard feature="funnel">
+            <PaywallGuard feature="report">
                 <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-y-auto">
                     {/* Top Navigation Bar */}
                     <div className="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 lg:px-20 py-3 print:hidden">

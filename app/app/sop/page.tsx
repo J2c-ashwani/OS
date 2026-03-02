@@ -28,7 +28,7 @@ export default function SOPEnforcementPage() {
 
     return (
         <DashboardLayout>
-            <PaywallGuard feature="funnel">
+            <PaywallGuard feature="sop">
                 <div className="flex-1 flex flex-col h-full bg-slate-950">
                     {/* Header */}
                     <header className="p-8 pb-4">
