@@ -36,10 +36,21 @@ export default function LoginPage() {
                     body: JSON.stringify({ name: name.trim(), email, password }),
                 });
 
+                const data = await res.json();
+
                 if (!res.ok) {
-                    const data = await res.json();
                     setError(data.message || 'Registration failed');
                     setIsLoading(false);
+                    return;
+                }
+
+                // Registration successful — show verification message (don't auto-login)
+                if (data.requiresVerification) {
+                    setError('');
+                    setIsLoading(false);
+                    // Show success state — user needs to verify email before logging in
+                    alert('Account created! Please check your email to verify your account before logging in.');
+                    setIsLogin(true); // Switch to login form
                     return;
                 }
             } catch (err) {
@@ -49,7 +60,7 @@ export default function LoginPage() {
             }
         }
 
-        // Login (or auto-login after successful registration)
+        // Login
         const result = await signIn('credentials', {
             email,
             password,
@@ -59,7 +70,13 @@ export default function LoginPage() {
         setIsLoading(false)
 
         if (result?.error) {
-            setError(isLogin ? 'Invalid email or password' : 'Login failed after registration')
+            // NextAuth returns the custom error message from authorize() throws
+            const errorMsg = result.error;
+            if (errorMsg.includes('verify') || errorMsg.includes('Verify')) {
+                setError('Please verify your email address before logging in. Check your inbox for the verification link.');
+            } else {
+                setError('Invalid email or password');
+            }
         } else {
             // Check onboarding status to decide where to redirect
             try {
